@@ -51,15 +51,16 @@ function Background({
   })
 
   useEffect(() => {
-    const inverval = setInterval(() => {
+    const interval = setInterval(() => {
       setImageMoveSpring.start({
         x: Math.cos(Date.now() / mod) * amp,
         y: Math.sin(Date.now() / mod) * amp,
       })
     }, 10)
     return () => {
-      clearInterval(inverval)
+      clearInterval(interval)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const imgRef = useRef<HTMLImageElement>(null)
@@ -84,25 +85,31 @@ function Background({
       )}
       <a.div style={imageMoveSpring} className='fixed h-full w-full'>
         {imageTransition((style, item, ts) => (
-          <a.div className='fixed h-full w-full object-cover' style={style}>
-            <Image
-              ref={imgRef}
-              src={item}
-              alt='gilneas'
-              fill
-              priority
-              quality={100}
-              onLoadingComplete={(e) => {
-                setLoadedImages((prev) => {
-                  return [...prev, e.currentSrc as string]
-                })
-              }}
-              className='fixed h-screen w-screen bg-cover object-cover'
+          <>
+            <a.div className={`fixed h-full w-full object-cover`} style={style}>
+              <Image
+                ref={imgRef}
+                src={item}
+                alt='gilneas'
+                fill
+                priority
+                quality={100}
+                onLoadingComplete={(e) => {
+                  setLoadedImages((prev) => {
+                    return [...prev, e.currentSrc as string]
+                  })
+                }}
+                className='fixed h-screen w-screen bg-cover object-cover'
+              />
+            </a.div>
+            <div
+              className={`fixed h-[150%] w-[150%] -top-24 bg-zinc-900/25 ${
+                item === images.bg_1 ? 'backdrop-blur-sm' : ''
+              }`}
             />
-          </a.div>
+          </>
         ))}
       </a.div>
-      <div className='fixed h-full w-full bg-zinc-900/25' />
     </>
   )
 }

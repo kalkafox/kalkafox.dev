@@ -7,10 +7,54 @@ const queryClient = new QueryClient()
 
 import { Icon } from '@iconify/react'
 import { trpc } from '@/util/trpc'
+import Head from 'next/head'
+import { useAtomValue } from 'jotai'
+import { splashTextAtom } from '@/util/atom'
+
+import meta from '@/data/meta.json'
 
 function App({ Component, pageProps }: AppProps) {
+  const splashText = useAtomValue(splashTextAtom)
   return (
     <QueryClientProvider client={queryClient}>
+      <Head>
+        <link
+          rel='apple-touch-icon'
+          sizes='180x180'
+          href='/apple-touch-icon.png'
+        />
+        <link
+          rel='icon'
+          type='image/png'
+          sizes='32x32'
+          href='/favicon-32x32.png'
+        />
+        <link
+          rel='icon'
+          type='image/png'
+          sizes='16x16'
+          href='/favicon-16x16.png'
+        />
+        <link rel='manifest' href='/site.webmanifest' />
+        <link rel='mask-icon' href='/safari-pinned-tab.svg' color='#5bbad5' />
+        <meta name='msapplication-TileColor' content='#da532c' />
+        <meta name='theme-color' content='#da532c' />
+        <meta name='description' content={meta.description} />
+        <meta property='og:title' content={meta.title} />
+        <meta property='og:description' content={meta.description} />
+        <meta property='og:image' content={meta.image} />
+        <meta property='og:url' content={meta.url} />
+        <meta property='og:type' content='website' />
+        <meta property='og:site_name' content='kalkafox' />
+        <meta property='og:locale' content='en_US' />
+        <meta name='twitter:card' content='summary_large_image' />
+        <meta name='twitter:site' content='@kalkafox' />
+        <meta name='twitter:creator' content='@kalkafox' />
+        <meta name='twitter:title' content={meta.title} />
+        <meta name='twitter:description' content={meta.description} />
+        <meta name='twitter:image' content={meta.image} />
+        <title>{`${splashText.replaceAll('`', '')} | kalkafox.dev`}</title>
+      </Head>
       <Background doResize={false} mod={5000} amp={20} />
       <Component {...pageProps} />
       <div className='fixed left-0 bottom-0 h-7 w-full bg-zinc-900/50 backdrop-blur-lg'>

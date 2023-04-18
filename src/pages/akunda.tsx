@@ -8,6 +8,7 @@ import images from '@/data/images.json'
 import { useSetAtom } from 'jotai'
 import { bgImageAtom } from '@/util/atom'
 import { poppins } from '@/util/font'
+import Head from 'next/head'
 
 function Akunda() {
   const router = useRouter()
@@ -168,9 +169,13 @@ function Akunda() {
         scale: 1,
       })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [encryptMode])
   return (
     <>
+      <Head>
+        <title>Clarity comes after the storm.</title>
+      </Head>
       <div className='fixed h-full w-full'>
         <a.div
           style={mainMenuSpring}
