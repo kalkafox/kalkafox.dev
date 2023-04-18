@@ -103,7 +103,7 @@ function Background({
               />
             </a.div>
             <div
-              className={`fixed h-[150%] w-[150%] -top-24 bg-zinc-900/25 ${
+              className={`fixed h-[150%] w-[150%] -top-24 -left-24 bg-zinc-900/25 ${
                 item === images.bg_1 ? 'backdrop-blur-sm' : ''
               }`}
             />
