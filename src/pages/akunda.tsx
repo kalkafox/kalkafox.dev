@@ -5,8 +5,8 @@ import { Icon } from '@iconify/react'
 import { useRouter } from 'next/router'
 
 import images from '@/data/images.json'
-import { useSetAtom } from 'jotai'
-import { bgImageAtom } from '@/util/atom'
+import { useAtom, useSetAtom } from 'jotai'
+import { bgImageAtom, previousPageAtom, showLoadSpinnerAtom } from '@/util/atom'
 import { poppins } from '@/util/font'
 import Head from 'next/head'
 
@@ -14,6 +14,10 @@ function Akunda() {
   const router = useRouter()
 
   const [encryptMode, setEncryptMode] = useState(true)
+
+  const [previousPage, setPreviousPage] = useAtom(previousPageAtom)
+
+  const [showLoadSpinner, setShowLoadSpinner] = useAtom(showLoadSpinnerAtom)
 
   const setBgImage = useSetAtom(bgImageAtom)
 
@@ -183,17 +187,22 @@ function Akunda() {
           <button
             className='absolute left-0 top-0'
             onClick={() => {
+              setShowLoadSpinner(true)
               setMainMenuSpring.start({
                 opacity: 0,
-                scale: 1.2,
+                scale: 0.8,
                 onChange: (e) => {
+                  setPreviousPage(router.pathname)
                   if (e.value.opacity < 0.4) {
                     router.push('/')
                   }
                 },
               })
             }}>
-            <Icon icon='ant-design:close-outlined' className='w-4 h-4 m-2' />
+            <Icon
+              icon='ant-design:close-outlined'
+              className='w-4 h-4 m-2 text-zinc-300'
+            />
           </button>
           <div className={`m-4 text-center ${poppins.className} text-zinc-300`}>
             Clarity comes after the storm.

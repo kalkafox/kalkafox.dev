@@ -4,7 +4,12 @@ import { useEffect, useRef, useState } from 'react'
 import images from '@/data/images.json'
 import { useSpring, animated as a, useTransition } from '@react-spring/web'
 import { useAtom, useAtomValue, useSetAtom } from 'jotai'
-import { bgImageAtom, loadedImagesAtom } from '@/util/atom'
+import {
+  bgImageAtom,
+  loadedImagesAtom,
+  previousPageAtom,
+  showLoadSpinnerAtom,
+} from '@/util/atom'
 
 import Image from 'next/image'
 import { useRouter } from 'next/router'
@@ -23,6 +28,8 @@ function Background({
   const router = useRouter()
   const [bgImage, setBgImage] = useAtom(bgImageAtom)
 
+  const [previousPage, setPreviousPage] = useAtom(previousPageAtom)
+
   useEffect(() => {
     if (router.asPath.startsWith('/akunda')) {
       setBgImage(images.bg_2)
@@ -32,7 +39,7 @@ function Background({
   })
 
   const setLoadedImages = useSetAtom(loadedImagesAtom)
-  const [showLoadSpinner, setShowLoadSpinner] = useState(true)
+  const [showLoadSpinner, setShowLoadSpinner] = useAtom(showLoadSpinnerAtom)
 
   const [imageMoveSpring, setImageMoveSpring] = useSpring(() => ({
     x: 0,
@@ -45,9 +52,27 @@ function Background({
   }))
 
   const imageTransition = useTransition(bgImage, {
-    from: { opacity: 0, scale: scale - 0.2 },
-    enter: { opacity: 1, scale: scale },
-    leave: { opacity: 0, scale: scale + 0.2 },
+    from: {
+      opacity: 0,
+      scale: previousPage === '/' ? scale - 0.2 : scale + 0.2,
+    },
+    enter: {},
+    leave: {
+      opacity: 0,
+      scale: previousPage === '/' ? scale + 0.2 : scale - 0.2,
+    },
+    onStart: (e, a, ts) => {
+      const interval = setInterval(() => {
+        console.log('onStart', imgRef.current?.complete)
+        if (imgRef.current?.complete) {
+          // a.start({
+          //   opacity: 1,
+          //   scale: scale,
+          // })
+          clearInterval(interval)
+        }
+      }, 100)
+    },
   })
 
   useEffect(() => {
@@ -68,8 +93,8 @@ function Background({
   return (
     <>
       {showLoadSpinner && (
-        <div className='fixed h-full w-full'>
-          <div className='fixed left-0 right-0 top-20 m-auto h-auto w-[40%] lg:w-[80%] portrait:w-[80%]'>
+        <div className='fixed h-full w-full z-10'>
+          <div className='fixed left-0 right-0 m-auto h-auto w-[40%] lg:w-[80%] portrait:w-[80%]'>
             <div className='m-4 text-center'>
               <div className='left-0 right-0 text-center'>
                 <Icon
@@ -95,6 +120,11 @@ function Background({
                 priority
                 quality={100}
                 onLoadingComplete={(e) => {
+                  setShowLoadSpinner(false)
+                  ts.ctrl.start({
+                    opacity: 1,
+                    scale: scale,
+                  })
                   setLoadedImages((prev) => {
                     return [...prev, e.currentSrc as string]
                   })

@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import { Inter } from 'next/font/google'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useAtom, useSetAtom } from 'jotai'
 import {
   useSpring,
@@ -16,7 +16,13 @@ import links from '@/data/links.json'
 import splashes from '@/data/splashes.json'
 import images from '@/data/images.json'
 
-import { bgImageAtom, loadedImagesAtom, splashTextAtom } from '@/util/atom'
+import {
+  bgImageAtom,
+  loadedImagesAtom,
+  previousPageAtom,
+  showLoadSpinnerAtom,
+  splashTextAtom,
+} from '@/util/atom'
 import ReactMarkdown from 'react-markdown'
 import { useQuery } from '@tanstack/react-query'
 import { GitHubUser } from '@/types/github'
@@ -25,8 +31,14 @@ import CountUp from 'react-countup'
 import { useRouter } from 'next/router'
 import { trpc } from '@/util/trpc'
 
+import { poppins } from '@/util/font'
+
 export default function Home() {
   const [loadedImages, setLoadedImages] = useAtom(loadedImagesAtom)
+
+  const [previousPage, setPreviousPage] = useAtom(previousPageAtom)
+
+  const [showLoadSpinner, setShowLoadSpinner] = useAtom(showLoadSpinnerAtom)
 
   const setBgImage = useSetAtom(bgImageAtom)
 
@@ -51,7 +63,6 @@ export default function Home() {
 
   const [mainMenuSpring, setMainMenuSpring] = useSpring(() => ({
     opacity: 0,
-    scale: 0.9,
     config: {
       friction: 20,
     },
@@ -64,6 +75,14 @@ export default function Home() {
       friction: 20,
     },
   }))
+
+  useEffect(() => {
+    if (previousPage.startsWith('/akunda')) {
+      setContentSpring.start({ scale: 1.2 })
+    } else if (previousPage.startsWith('/')) {
+      setContentSpring.start({ scale: 0.9 })
+    }
+  }, [previousPage])
 
   const [avatarSpring, setAvatarSpring] = useSpring(() => ({
     rotateZ: 0,
@@ -253,16 +272,20 @@ export default function Home() {
               </>
             )}
           </div>
-          <p>Projects</p>
+          <p className={`text-zinc-300 font-bold text-lg ${poppins.className}`}>
+            Projects
+          </p>
           <div className='grid grid-flow-col grid-rows-1 justify-center space-x-2'>
             <div className='text-zinc-300'>
               <button
                 onClick={() => {
+                  setShowLoadSpinner(true)
                   setContentSpring.start({
                     opacity: 0,
                     scale: 1.2,
                     onChange: (e) => {
                       if (e.value.opacity < 0.4) {
+                        setPreviousPage('/')
                         router.push('/akunda')
                       }
                     },

@@ -7,3 +7,7 @@ export const loadedImagesAtom = atom<string[]>([])
 export const bgImageAtom = atom<string>(images.bg_1)
 
 export const splashTextAtom = atom<string>(splashes[0])
+
+export const previousPageAtom = atom<string>('')
+
+export const showLoadSpinnerAtom = atom<boolean>(false)
