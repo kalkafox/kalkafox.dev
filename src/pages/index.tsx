@@ -1,20 +1,20 @@
-import Image from 'next/image'
-import { Inter } from 'next/font/google'
-import { useEffect, useRef, useState } from 'react'
-import { useAtom, useSetAtom } from 'jotai'
+import { Icon } from '@iconify/react'
 import {
+  animated as a,
   useSpring,
   useSprings,
   useTransition,
-  animated as a,
 } from '@react-spring/web'
+import { useAtom, useSetAtom } from 'jotai'
+import { Inter } from 'next/font/google'
+import Image from 'next/image'
+import { useEffect, useState } from 'react'
 
 const inter = Inter({ subsets: ['latin'] })
-import { Icon } from '@iconify/react'
 
+import images from '@/data/images.json'
 import links from '@/data/links.json'
 import splashes from '@/data/splashes.json'
-import images from '@/data/images.json'
 
 import {
   bgImageAtom,
@@ -24,12 +24,10 @@ import {
   splashTextAtom,
 } from '@/util/atom'
 import ReactMarkdown from 'react-markdown'
-import { useQuery } from '@tanstack/react-query'
-import { GitHubUser } from '@/types/github'
 
-import CountUp from 'react-countup'
-import { useRouter } from 'next/router'
 import { trpc } from '@/util/trpc'
+import { useRouter } from 'next/router'
+import CountUp from 'react-countup'
 
 import { poppins } from '@/util/font'
 
@@ -77,11 +75,15 @@ export default function Home() {
   }))
 
   useEffect(() => {
-    if (previousPage.startsWith('/akunda')) {
+    if (
+      previousPage.startsWith('/akunda') ||
+      previousPage.startsWith('/mcremote')
+    ) {
       setContentSpring.start({ scale: 1.2 })
     } else if (previousPage.startsWith('/')) {
       setContentSpring.start({ scale: 0.9 })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [previousPage])
 
   const [avatarSpring, setAvatarSpring] = useSpring(() => ({
@@ -102,18 +104,26 @@ export default function Home() {
 
   const { data: userData } = trpc.fetchGithub.useQuery()
 
+  useEffect(() => {
+    if (userData) {
+      splashes.push(userData.bio)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userData])
+
   return (
     <>
       <a.div
         style={contentSpring}
-        className='fixed left-0 right-0 top-20 m-auto h-auto w-[40%] rounded-xl backdrop-blur-lg bg-zinc-900/75 portrait:w-[80%]'>
-        <div className='m-4 text-center'>
-          <a.div className='inline-block' style={avatarSpring}>
+        className="absolute left-0 right-0 top-20 m-auto h-auto w-[40%] rounded-xl bg-zinc-900/75 backdrop-blur-lg portrait:w-[80%]"
+      >
+        <div className="m-4 text-center">
+          <a.div className="inline-block" style={avatarSpring}>
             <Image
               src={images.avatar}
-              alt='avatar'
-              width='128'
-              height='128'
+              alt="avatar"
+              width="128"
+              height="128"
               priority
               quality={100}
               onLoadingComplete={(e) => {
@@ -136,10 +146,10 @@ export default function Home() {
                   scale: 1,
                 })
                 setLoadedImages((prev) => {
-                  return [...prev, e.currentSrc as string]
+                  return [...prev, images.avatar]
                 })
               }}
-              className='left-0 right-0 m-auto inline select-none rounded-full'
+              className="left-0 right-0 m-auto inline select-none rounded-full"
             />
           </a.div>
           <span
@@ -147,10 +157,15 @@ export default function Home() {
               e.preventDefault()
             }}
             onAuxClick={() => {
-              setSplashText(
-                splashes[Math.floor(Math.random() * splashes.length)],
-              )
+              let newRandText =
+                splashes[Math.floor(Math.random() * splashes.length)]
+              while (newRandText === splashText) {
+                newRandText =
+                  splashes[Math.floor(Math.random() * splashes.length)]
+              }
+              setSplashText(newRandText)
               setSpinBuffer((prev) => prev - 360)
+
               setAvatarSpring.start({
                 rotateZ: spinBuffer - 360,
                 onRest: () => {
@@ -160,9 +175,13 @@ export default function Home() {
               })
             }}
             onClick={() => {
-              setSplashText(
-                splashes[Math.floor(Math.random() * splashes.length)],
-              )
+              let newRandText =
+                splashes[Math.floor(Math.random() * splashes.length)]
+              while (newRandText === splashText) {
+                newRandText =
+                  splashes[Math.floor(Math.random() * splashes.length)]
+              }
+              setSplashText(newRandText)
               setSpinBuffer((prev) => prev + 360)
               setAvatarSpring.start({
                 rotateZ: spinBuffer + 360,
@@ -172,24 +191,25 @@ export default function Home() {
                 },
               })
             }}
-            className='fixed left-0 right-0 m-auto h-[128px] w-[128px] rounded-full border-2 border-zinc-300'
+            className="fixed left-0 right-0 m-auto h-[128px] w-[128px] rounded-full border-2 border-zinc-300"
           />
           {splashTransition((style, item) => (
             <a.div
               style={style}
-              className='h-0 text-xl text-zinc-300'
-              key={item}>
+              className="h-0 text-xl text-zinc-300"
+              key={item}
+            >
               <ReactMarkdown>{item}</ReactMarkdown>
             </a.div>
           ))}
-          <div className='my-8 mb-8 grid grid-flow-col-dense justify-center gap-4 text-3xl'>
+          <div className="my-8 mb-8 grid grid-flow-col-dense justify-center gap-4 text-3xl">
             {linkSprings.map(
               (props, index) =>
                 links[index].active && (
                   <a.a
                     style={linkSprings[index]}
-                    rel='noreferrer'
-                    target='_blank'
+                    rel="noreferrer"
+                    target="_blank"
                     href={links[index].link}
                     key={links[index].icon}
                     onMouseEnter={() => {
@@ -203,98 +223,156 @@ export default function Home() {
                       //e.target.style.color = link.active ? "rgb(212,212,216)" : "rgb(82,82,86)"
                       props.color.start('#f0f0f0')
                       props.scale.start(1)
-                    }}>
+                    }}
+                  >
                     <Icon icon={links[index].icon} />
                   </a.a>
                 ),
             )}
           </div>
-          <hr className='mb-4 border-zinc-500' />
-          <div className='grid grid-flow-col grid-rows-1 justify-center space-x-2'>
+          <hr className="mb-4 border-zinc-500" />
+          <div className="grid grid-flow-col grid-rows-1 justify-center space-x-2">
             {userData && (
               <>
-                <span className='text-zinc-300'>
+                <span className="text-zinc-300">
                   <Icon
-                    icon='codicon:gist'
+                    icon="codicon:gist"
                     inline={true}
-                    className='inline text-zinc-300'
+                    className="inline text-zinc-300"
                   />
                   <CountUp
                     start={0}
                     end={userData.public_gists}
                     useEasing={true}
-                    delay={0}>
+                    delay={0}
+                  >
                     {({ countUpRef }) => <span ref={countUpRef} />}
                   </CountUp>
                 </span>
-                <span className='text-zinc-300'>
+                <span className="text-zinc-300">
                   <Icon
-                    icon='mdi:location-enter'
+                    icon="mdi:location-enter"
                     inline={true}
-                    className='inline text-zinc-300'
+                    className="inline text-zinc-300"
                   />
                   <CountUp
                     start={0}
                     end={userData.followers}
                     delay={0}
-                    useEasing={true}>
+                    useEasing={true}
+                  >
                     {({ countUpRef }) => <span ref={countUpRef} />}
                   </CountUp>
                 </span>
-                <span className='text-zinc-300'>
+                <span className="text-zinc-300">
                   <Icon
-                    icon='mdi:location-exit'
+                    icon="mdi:location-exit"
                     inline={true}
-                    className='inline text-zinc-300'
+                    className="inline text-zinc-300"
                   />
                   <CountUp
                     start={0}
                     end={userData.following}
                     delay={0}
-                    useEasing={true}>
+                    useEasing={true}
+                  >
                     {({ countUpRef }) => <span ref={countUpRef} />}
                   </CountUp>
                 </span>
-                <span className='text-zinc-300'>
+                <span className="text-zinc-300">
                   <Icon
-                    icon='mdi:source-repository-multiple'
+                    icon="mdi:source-repository-multiple"
                     inline={true}
-                    className='inline text-zinc-300'
+                    className="inline text-zinc-300"
                   />
                   <CountUp
                     start={0}
                     end={userData.public_repos}
                     delay={0}
-                    useEasing={true}>
+                    useEasing={true}
+                  >
                     {({ countUpRef }) => <span ref={countUpRef} />}
                   </CountUp>
                 </span>
               </>
             )}
           </div>
-          <p className={`text-zinc-300 font-bold text-lg ${poppins.className}`}>
+          <p className={`text-lg font-bold text-zinc-300 ${poppins.className}`}>
             Projects
           </p>
-          <div className='grid grid-flow-col grid-rows-1 justify-center space-x-2'>
-            <div className='text-zinc-300'>
+          <div className="grid grid-flow-col grid-rows-1 justify-center">
+            <div className="text-zinc-300">
               <button
                 onClick={() => {
                   setShowLoadSpinner(true)
+                  setBgImage(images.bg_2)
                   setContentSpring.start({
                     opacity: 0,
                     scale: 1.2,
-                    onChange: (e) => {
+                    onChange: (e, ctrl) => {
                       if (e.value.opacity < 0.4) {
-                        setPreviousPage('/')
                         router.push('/akunda')
+                        ctrl.set({
+                          opacity: 0,
+                          scale: 1.2,
+                        })
                       }
                     },
                   })
-                }}>
+                }}
+              >
                 <Icon
-                  icon='material-symbols:lock'
+                  icon="material-symbols:lock"
                   inline={true}
-                  className='inline text-zinc-300'
+                  className="inline text-zinc-300"
+                />
+              </button>
+              <button
+                onClick={() => {
+                  setContentSpring.start({
+                    opacity: 0,
+                    scale: 1.2,
+                    onChange: (e, ctrl) => {
+                      if (e.value.opacity < 0.4) {
+                        setPreviousPage('/')
+                        router.push('/mcremote')
+                        ctrl.set({
+                          opacity: 0,
+                          scale: 1.2,
+                        })
+                      }
+                    },
+                  })
+                }}
+              >
+                <Icon
+                  icon="clarity:block-line"
+                  inline={true}
+                  className="inline text-zinc-300"
+                />
+              </button>
+              <button
+                onClick={() => {
+                  setContentSpring.start({
+                    opacity: 0,
+                    scale: 1.2,
+                    onChange: (e, ctrl) => {
+                      if (e.value.opacity < 0.2) {
+                        setPreviousPage('/')
+                        router.push('/terminal')
+                        ctrl.set({
+                          opacity: 0,
+                          scale: 1.2,
+                        })
+                      }
+                    },
+                  })
+                }}
+              >
+                <Icon
+                  icon="material-symbols:terminal"
+                  inline={true}
+                  className="inline text-zinc-300"
                 />
               </button>
             </div>

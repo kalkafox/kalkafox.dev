@@ -1,15 +1,15 @@
 import { Icon } from '@iconify/react'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 
 import images from '@/data/images.json'
-import { useSpring, animated as a, useTransition } from '@react-spring/web'
-import { useAtom, useAtomValue, useSetAtom } from 'jotai'
 import {
   bgImageAtom,
   loadedImagesAtom,
   previousPageAtom,
   showLoadSpinnerAtom,
 } from '@/util/atom'
+import { animated as a, useSpring, useTransition } from '@react-spring/web'
+import { useAtom } from 'jotai'
 
 import Image from 'next/image'
 import { useRouter } from 'next/router'
@@ -28,17 +28,23 @@ function Background({
   const router = useRouter()
   const [bgImage, setBgImage] = useAtom(bgImageAtom)
 
+  const [loadedImages, setLoadedImages] = useAtom(loadedImagesAtom)
+
   const [previousPage, setPreviousPage] = useAtom(previousPageAtom)
 
   useEffect(() => {
     if (router.asPath.startsWith('/akunda')) {
+      console.log('ya')
       setBgImage(images.bg_2)
+    } else if (router.asPath.startsWith('/mcremote')) {
+      console.log('ye')
+      setBgImage(images.bg_3)
     } else if (router.asPath.startsWith('/')) {
       setBgImage(images.bg_1)
     }
-  })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [router.asPath])
 
-  const setLoadedImages = useSetAtom(loadedImagesAtom)
   const [showLoadSpinner, setShowLoadSpinner] = useAtom(showLoadSpinnerAtom)
 
   const [imageMoveSpring, setImageMoveSpring] = useSpring(() => ({
@@ -54,24 +60,22 @@ function Background({
   const imageTransition = useTransition(bgImage, {
     from: {
       opacity: 0,
-      scale: previousPage === '/' ? scale - 0.2 : scale + 0.2,
+      scale:
+        previousPage === '/' || previousPage === '' ? scale - 0.2 : scale + 0.2,
     },
-    enter: {},
+    enter: () => {
+      if (!loadedImages.includes(bgImage)) {
+        return {}
+      }
+      setShowLoadSpinner(false)
+      return {
+        opacity: 1,
+        scale: scale,
+      }
+    },
     leave: {
       opacity: 0,
       scale: previousPage === '/' ? scale + 0.2 : scale - 0.2,
-    },
-    onStart: (e, a, ts) => {
-      const interval = setInterval(() => {
-        console.log('onStart', imgRef.current?.complete)
-        if (imgRef.current?.complete) {
-          // a.start({
-          //   opacity: 1,
-          //   scale: scale,
-          // })
-          clearInterval(interval)
-        }
-      }, 100)
     },
   })
 
@@ -93,47 +97,48 @@ function Background({
   return (
     <>
       {showLoadSpinner && (
-        <div className='fixed h-full w-full z-10'>
-          <div className='fixed left-0 right-0 m-auto h-auto w-[40%] lg:w-[80%] portrait:w-[80%]'>
-            <div className='m-4 text-center'>
-              <div className='left-0 right-0 text-center'>
+        <div className="fixed z-10 h-full w-full">
+          <div className="fixed left-0 right-0 m-auto h-auto w-[40%] lg:w-[80%] portrait:w-[80%]">
+            <div className="m-4 text-center">
+              <div className="left-0 right-0 text-center">
                 <Icon
-                  className='fixed left-0 w-full animate-spin text-zinc-300'
+                  className="fixed left-0 w-full animate-spin text-zinc-300"
                   width={24}
                   height={24}
-                  icon='gg:spinner'
+                  icon="gg:spinner"
                 />
               </div>
             </div>
           </div>
         </div>
       )}
-      <a.div style={imageMoveSpring} className='fixed h-full w-full'>
+      <a.div style={imageMoveSpring} className="fixed h-full w-full">
         {imageTransition((style, item, ts) => (
           <>
             <a.div className={`fixed h-full w-full object-cover`} style={style}>
               <Image
                 ref={imgRef}
                 src={item}
-                alt='gilneas'
+                alt="gilneas"
                 fill
                 priority
                 quality={100}
                 onLoadingComplete={(e) => {
+                  console.log('hallo')
                   setShowLoadSpinner(false)
                   ts.ctrl.start({
                     opacity: 1,
                     scale: scale,
                   })
                   setLoadedImages((prev) => {
-                    return [...prev, e.currentSrc as string]
+                    return [...prev, item as string]
                   })
                 }}
-                className='fixed h-screen w-screen bg-cover object-cover'
+                className="fixed h-screen w-screen bg-cover object-cover"
               />
             </a.div>
             <div
-              className={`fixed h-[150%] w-[150%] -top-24 -left-24 bg-zinc-900/25 ${
+              className={`fixed -left-24 -top-24 h-[150%] w-[150%] bg-zinc-900/25 ${
                 item === images.bg_1 ? 'backdrop-blur-sm' : ''
               }`}
             />

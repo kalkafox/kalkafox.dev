@@ -1,7 +1,8 @@
-import { z } from 'zod'
 import { procedure, router } from '@/server/trpc'
-import redis from '@/util/upstash'
 import { GitHubUser } from '@/types/github'
+import redis from '@/util/upstash'
+import 'xterm/css/xterm.css'
+import { z } from 'zod'
 
 export const appRouter = router({
   fetchGithub: procedure.query(async ({ ctx }) => {
@@ -19,6 +20,10 @@ export const appRouter = router({
       `Redis cache hit took ${new Date().getTime() - now.getTime()}ms`,
     )
     return b as GitHubUser
+  }),
+  incrementSpin: procedure.input(z.string()).mutation(async ({ input }) => {
+    const a = await redis.incr(input)
+    return a
   }),
 })
 

@@ -2,11 +2,14 @@
   "Hi, I do stuffs.",
   "Hits the spot!",
   "I'm a fox, beep boop.",
-  "`local fox = true`",
-  "`let mut fox = true;`",
+  "`local kit = true`",
+  "`let mut reynard = true;`",
   "`const fox = true;`",
-  "`var fox = true;`",
-  "`fox = true;`",
+  "`var tod = true;`",
+  "`firefox = True`",
   "`public static boolean fox = true;`",
-  "`constexpr bool fox = true;`"
+  "`constexpr bool foxtrot = true;`",
+  "I'm not lazy, I'm just debugging.",
+  "I speak fluent Java, C++, and Fursona.",
+  "I'm not anti-social, I'm just pro-code."
 ]

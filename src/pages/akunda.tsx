@@ -5,9 +5,10 @@ import { Icon } from '@iconify/react'
 import { useRouter } from 'next/router'
 
 import images from '@/data/images.json'
-import { useAtom, useSetAtom } from 'jotai'
+
 import { bgImageAtom, previousPageAtom, showLoadSpinnerAtom } from '@/util/atom'
 import { poppins } from '@/util/font'
+import { useAtom, useSetAtom } from 'jotai'
 import Head from 'next/head'
 
 function Akunda() {
@@ -180,28 +181,35 @@ function Akunda() {
       <Head>
         <title>Clarity comes after the storm.</title>
       </Head>
-      <div className='fixed h-full w-full'>
+      <div className="absolute h-full w-full">
         <a.div
           style={mainMenuSpring}
-          className='fixed left-0 right-0 top-20 m-auto h-auto w-[40%] rounded-xl bg-zinc-900/50 backdrop-blur-lg portrait:w-[80%]'>
+          className="absolute left-0 right-0 top-20 m-auto h-auto w-[40%] rounded-xl bg-zinc-900/50 backdrop-blur-lg portrait:w-[80%]"
+        >
           <button
-            className='absolute left-0 top-0'
+            className="absolute left-0 top-0"
             onClick={() => {
               setShowLoadSpinner(true)
+              setBgImage(images.bg_1)
+              setPreviousPage(router.pathname)
               setMainMenuSpring.start({
                 opacity: 0,
                 scale: 0.8,
-                onChange: (e) => {
-                  setPreviousPage(router.pathname)
+                onChange: (e, ctrl) => {
                   if (e.value.opacity < 0.4) {
-                    router.push('/')
+                    ctrl.set({
+                      opacity: 0,
+                      scale: 0.8,
+                    })
+                    router.back()
                   }
                 },
               })
-            }}>
+            }}
+          >
             <Icon
-              icon='ant-design:close-outlined'
-              className='w-4 h-4 m-2 text-zinc-300'
+              icon="material-symbols:arrow-back"
+              className="m-2 h-4 w-4 text-zinc-300"
             />
           </button>
           <div className={`m-4 text-center ${poppins.className} text-zinc-300`}>
@@ -209,7 +217,8 @@ function Akunda() {
           </div>
           <a.div
             style={buttonSelectionSpring}
-            className='absolute right-20 left-0 m-auto inline w-20 rounded-xl bg-zinc-400 text-center text-zinc-400'>
+            className="absolute left-0 right-20 m-auto inline w-20 rounded-xl bg-zinc-400 text-center text-zinc-400"
+          >
             .
           </a.div>
           <a.button
@@ -220,7 +229,8 @@ function Akunda() {
               })
               setEncryptMode(true)
             }}
-            className={`absolute right-20 left-0 m-auto inline w-20 text-center ${poppins.className} text-zinc-900`}>
+            className={`absolute left-0 right-20 m-auto inline w-20 text-center ${poppins.className} text-zinc-900`}
+          >
             Encrypt
           </a.button>
           <a.button
@@ -231,20 +241,21 @@ function Akunda() {
               })
               setEncryptMode(false)
             }}
-            className={`absolute left-20 right-0 m-auto inline w-20 text-center ${poppins.className} text-zinc-300`}>
+            className={`absolute left-20 right-0 m-auto inline w-20 text-center ${poppins.className} text-zinc-300`}
+          >
             Decrypt
           </a.button>
           <br />
-          <div className='m-4'>
-            <form className='w-[90%]'>
-              <div className='grid grid-cols-2 gap-2'>
+          <div className="m-4">
+            <form className="w-[90%]">
+              <div className="grid grid-cols-2 gap-2">
                 <Icon
-                  icon='material-symbols:key'
-                  className='w-full text-4xl text-zinc-300'
+                  icon="material-symbols:key"
+                  className="w-full text-4xl text-zinc-300"
                 />
                 <code>
                   <textarea
-                    className='w-full rounded-lg bg-zinc-900/50 p-2 text-zinc-50'
+                    className="w-full rounded-lg bg-zinc-900/50 p-2 text-zinc-50"
                     value={key}
                     onChange={(e) => {
                       setKey(e.target.value)
@@ -253,14 +264,14 @@ function Akunda() {
                   />
                 </code>
                 <Icon
-                  icon='mdi:message-lock-outline'
-                  className='inline w-full text-4xl text-zinc-300'
+                  icon="mdi:message-lock-outline"
+                  className="inline w-full text-4xl text-zinc-300"
                   inline={true}
                 />
                 {/* resizable input box */}
                 <code>
                   <textarea
-                    className='w-full resize-none rounded-lg bg-zinc-900/50 p-2 text-zinc-50'
+                    className="w-full resize-none rounded-lg bg-zinc-900/50 p-2 text-zinc-50"
                     onChange={(e) => {
                       encryptMode
                         ? setEncryptMessage(e.target.value)
@@ -275,7 +286,7 @@ function Akunda() {
               </div>
             </form>
 
-            <div className='relative grid grid-flow-col justify-center gap-2'>
+            <div className="relative grid grid-flow-col justify-center gap-2">
               <a.button
                 style={colorSpring}
                 onClick={() => {
@@ -293,28 +304,29 @@ function Akunda() {
                     },
                   })
                   window.localStorage.setItem('akunda-key', key)
-                }}>
+                }}
+              >
                 <Icon
-                  icon='mdi:content-save-check-outline'
-                  className='text-xl'
+                  icon="mdi:content-save-check-outline"
+                  className="text-xl"
                 />
               </a.button>
               <button>
-                <input type='checkbox' className='hidden' />
+                <input type="checkbox" className="hidden" />
               </button>
             </div>
 
-            <hr className='mx-auto my-4 h-1 w-48 rounded border-0 bg-gray-100 dark:bg-gray-700 md:my-10' />
-            <div className='m-4'>
+            <hr className="mx-auto my-4 h-1 w-48 rounded border-0 bg-gray-100 dark:bg-gray-700 md:my-10" />
+            <div className="m-4">
               <Icon
-                icon='mdi:message-reply-outline'
-                className='w-full text-4xl text-zinc-300'
+                icon="mdi:message-reply-outline"
+                className="w-full text-4xl text-zinc-300"
               />
               <code>
                 <textarea
                   disabled={true}
                   value={encryptMode ? encrypt : decrypt}
-                  className='w-full resize-none rounded-lg bg-zinc-900/50 p-2 text-zinc-50'
+                  className="w-full resize-none rounded-lg bg-zinc-900/50 p-2 text-zinc-50"
                 />
               </code>
               <code>
@@ -325,7 +337,7 @@ function Akunda() {
                       ? Buffer.from(encrypt, 'base64').toString('utf8')
                       : Buffer.from(decrypt, 'base64').toString('utf8')
                   }
-                  className='w-full resize-none rounded-lg bg-zinc-900/50 p-2 text-zinc-50'
+                  className="w-full resize-none rounded-lg bg-zinc-900/50 p-2 text-zinc-50"
                 />
               </code>
             </div>
@@ -345,14 +357,16 @@ function Akunda() {
               })
             }
           }}
-          className='fixed h-full w-full bg-zinc-900/0'>
+          className="fixed h-full w-full bg-zinc-900/0"
+        >
           <a.div
             style={multiLineInputSpring}
-            className='fixed left-0 right-0 top-20 m-auto h-auto w-[38%] rounded-xl bg-zinc-900/50 backdrop-blur-lg portrait:w-[80%]'>
+            className="fixed left-0 right-0 top-20 m-auto h-auto w-[38%] rounded-xl bg-zinc-900/50 backdrop-blur-lg portrait:w-[80%]"
+          >
             <code>
               <textarea
                 ref={multiLineInputRef}
-                className='h-80 w-full rounded-lg bg-zinc-900/50 p-2 text-zinc-50'
+                className="h-80 w-full rounded-lg bg-zinc-900/50 p-2 text-zinc-50"
                 value={encryptMode ? encryptMessage : decryptMessage}
                 onChange={(e) => {
                   encryptMode

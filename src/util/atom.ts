@@ -1,6 +1,6 @@
-import { atom } from 'jotai'
 import images from '@/data/images.json'
 import splashes from '@/data/splashes.json'
+import { atom } from 'jotai'
 
 export const loadedImagesAtom = atom<string[]>([])
 
@@ -11,3 +11,5 @@ export const splashTextAtom = atom<string>(splashes[0])
 export const previousPageAtom = atom<string>('')
 
 export const showLoadSpinnerAtom = atom<boolean>(false)
+
+export const fingerprintAtom = atom<string>('')

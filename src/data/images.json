@@ -1,5 +1,7 @@
 {
-  "bg_1": "https://db17gxef1g90a.cloudfront.net/img/2.jpg",
-  "bg_2": "https://db17gxef1g90a.cloudfront.net/img/6.jpg",
+  "bg_1": "https://voldunai-cdn.kalkafox.dev/img/2.jpg",
+  "bg_2": "https://voldunai-cdn.kalkafox.dev/img/3.jpg",
+  "bg_3": "https://voldunai-cdn.kalkafox.dev/img/KtGj5UZAgXztPZw1.png",
+  "bg_404": "https://voldunai-cdn.kalkafox.dev/img/1.jpg",
   "avatar": "https://avatars.githubusercontent.com/u/9144208?s=460&u=3d2e3c8d0d8f8b8f8f8f8f8f8f8f8f8f8f8f8f8f&v=4"
 }

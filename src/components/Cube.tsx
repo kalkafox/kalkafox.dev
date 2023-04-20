@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 
 import { Canvas, useFrame } from '@react-three/fiber'
 
-import { useSpring, animated as a } from '@react-spring/three'
+import { animated as a, useSpring } from '@react-spring/three'
 
 import { Mesh } from 'three'
 
