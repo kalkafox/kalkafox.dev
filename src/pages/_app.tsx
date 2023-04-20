@@ -2,6 +2,7 @@ import Background from '@/components/Background'
 import '@/styles/globals.css'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import type { AppProps } from 'next/app'
+import { Analytics } from '@vercel/analytics/react'
 
 const queryClient = new QueryClient()
 
@@ -37,9 +38,9 @@ function App({ Component, pageProps }: AppProps) {
             href='/favicon-16x16.png'
           />
           <link rel='manifest' href='/site.webmanifest' />
-          <link rel='mask-icon' href='/safari-pinned-tab.svg' color='#CB837D' />
-          <meta name='msapplication-TileColor' content='#8E2A21' />
-          <meta name='theme-color' content='#8E2A21' />
+          <link rel='mask-icon' href='/safari-pinned-tab.svg' color='#597056' />
+          <meta name='msapplication-TileColor' content='#79BC71' />
+          <meta name='theme-color' content='#79BC71' />
           <meta name='description' content={meta.description} />
           <meta property='og:title' content={meta.title} />
           <meta property='og:description' content={meta.description} />
@@ -95,6 +96,7 @@ function App({ Component, pageProps }: AppProps) {
           </a>
         </div>
       </QueryClientProvider>
+      <Analytics />
     </div>
   )
 }
