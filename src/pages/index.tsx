@@ -25,11 +25,12 @@ import {
 } from '@/util/atom'
 import ReactMarkdown from 'react-markdown'
 
-import { trpc } from '@/util/trpc'
 import { useRouter } from 'next/router'
 import CountUp from 'react-countup'
 
+import { GitHubUser } from '@/types/github'
 import { poppins } from '@/util/font'
+import { useQuery } from '@tanstack/react-query'
 
 export default function Home() {
   const [loadedImages, setLoadedImages] = useAtom(loadedImagesAtom)
@@ -94,15 +95,15 @@ export default function Home() {
     },
   }))
 
-  // const { data: userData } = useQuery<GitHubUser>({
-  //   queryKey: ['github-user'],
-  //   queryFn: async () => {
-  //     const res = await fetch('https://api.github.com/users/kalkafox')
-  //     return res.json() as Promise<GitHubUser>
-  //   },
-  // })
+  const { data: userData } = useQuery<GitHubUser>({
+    queryKey: ['github-user'],
+    queryFn: async () => {
+      const res = await fetch('https://api.github.com/users/kalkafox')
+      return res.json() as Promise<GitHubUser>
+    },
+  })
 
-  const { data: userData } = trpc.fetchGithub.useQuery()
+  //const { data: userData } = trpc.fetchGithub.useQuery()
 
   useEffect(() => {
     if (userData) {

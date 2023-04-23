@@ -1,9 +1,14 @@
-import { appRouter } from '@/server/routers/_app'
-import * as trpcNext from '@trpc/server/adapters/next'
+export {}
+// import { appRouter } from '@/server/routers/_app'
+// import * as trpcNext from '@trpc/server/adapters/next'
 
-import { createContext } from '@/server/context'
+// import { createContext } from '@/server/context'
 
-export default trpcNext.createNextApiHandler({
-  router: appRouter,
-  createContext,
-})
+// export const config = {
+//   runtime: 'edge',
+// }
+
+// export default trpcNext.createNextApiHandler({
+//   router: appRouter,
+//   createContext,
+// })

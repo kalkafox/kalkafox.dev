@@ -8,7 +8,6 @@ import 'xterm/css/xterm.css'
 
 const queryClient = new QueryClient()
 
-import { trpc } from '@/util/trpc'
 import { Icon } from '@iconify/react'
 import Head from 'next/head'
 
@@ -89,4 +88,6 @@ function App({ Component, pageProps }: AppProps) {
   )
 }
 
-export default trpc.withTRPC(App)
+//export default trpc.withTRPC(App)
+
+export default App
