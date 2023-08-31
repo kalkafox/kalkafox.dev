@@ -12,6 +12,8 @@ import { useEffect, useState } from 'react'
 
 const inter = Inter({ subsets: ['latin'] })
 
+import { poppins } from '@/util/font'
+
 import images from '@/data/images.json'
 import links from '@/data/links.json'
 import splashes from '@/data/splashes.json'
@@ -29,7 +31,6 @@ import { useRouter } from 'next/router'
 import CountUp from 'react-countup'
 
 import { GitHubUser } from '@/types/github'
-import { poppins } from '@/util/font'
 import { useQuery } from '@tanstack/react-query'
 
 export default function Home() {
@@ -116,7 +117,7 @@ export default function Home() {
     <>
       <a.div
         style={contentSpring}
-        className="absolute left-0 right-0 top-20 m-auto h-auto w-[40%] rounded-xl bg-zinc-900/75 backdrop-blur-lg portrait:w-[80%]"
+        className="pride-bar absolute left-0 right-0 top-20 m-auto h-auto w-[40%] rounded-b-xl rounded-t-lg bg-zinc-900/75 backdrop-blur-lg portrait:w-[80%]"
       >
         <div className="m-4 text-center">
           <a.div className="inline-block" style={avatarSpring}>
@@ -298,7 +299,7 @@ export default function Home() {
               </>
             )}
           </div>
-          <p className={`text-lg font-bold text-zinc-300 ${poppins.className}`}>
+          {/* <p className={`text-lg font-bold text-zinc-300 ${poppins.className}`}>
             Projects
           </p>
           <div className="grid grid-flow-col grid-rows-1 justify-center">
@@ -377,7 +378,7 @@ export default function Home() {
                 />
               </button>
             </div>
-          </div>
+          </div> */}
         </div>
       </a.div>
     </>

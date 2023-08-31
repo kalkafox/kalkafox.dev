@@ -21,6 +21,10 @@ function Meta() {
   return (
     <>
       <Head>
+        <link
+          rel="stylesheet"
+          href="https://cdn.pride.codes/css/bar_helpers.css"
+        />
         <title>{`${splashText.replaceAll('`', '')} | kalkafox.dev`}</title>
       </Head>
     </>

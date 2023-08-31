@@ -8,7 +8,6 @@
   "arrowParens": "always",
   "endOfLine": "auto",
   "plugins": [
-    "prettier-plugin-organize-imports",
     "prettier-plugin-organize-attributes",
     "prettier-plugin-tailwindcss"
   ],

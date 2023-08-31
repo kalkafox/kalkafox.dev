@@ -77,3 +77,8 @@ body {
     background: #555;
   }
 }
+
+.pride-bar:before {
+  border-top-left-radius: 0.25rem;
+  border-top-right-radius: 0.25rem;
+}
