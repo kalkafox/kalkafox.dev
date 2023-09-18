@@ -14,11 +14,21 @@ import Head from 'next/head'
 import Meta from '@/components/Meta'
 import meta from '@/data/meta.json'
 import { Provider } from 'jotai'
+import { bgPosAtom } from '@/util/atom'
+import { useState } from 'react'
 
 function App({ Component, pageProps }: AppProps) {
+  const [bgPos, setBgPos] = useState<Pos>({ x: 0, y: 0 })
+
   return (
-    <div className="absolute -z-20 h-full w-full bg-zinc-900">
-      <Provider>
+    <Provider>
+      <div
+        onMouseMove={(e) => {
+          //console.log(e.clientX, e.clientY)
+          setBgPos({ x: -e.clientX * 0.01, y: -e.clientY * 0.02 })
+        }}
+        className="absolute -z-20 h-full w-full bg-zinc-900"
+      >
         <QueryClientProvider client={queryClient}>
           <Head>
             <link
@@ -62,7 +72,13 @@ function App({ Component, pageProps }: AppProps) {
             <meta name="twitter:image" content={meta.image} />
           </Head>
           <Meta />
-          <Background doResize={false} mod={5000} amp={20} />
+          <Background
+            doResize={false}
+            mod={5000}
+            amp={20}
+            x={bgPos.x}
+            y={bgPos.y}
+          />
           <Component {...pageProps} />
           <div className="fixed bottom-0 left-0 m-2 grid h-8 w-8 items-center justify-center rounded-lg bg-zinc-900/50 backdrop-blur-lg">
             <span>
@@ -83,8 +99,8 @@ function App({ Component, pageProps }: AppProps) {
           </div>
           <Analytics />
         </QueryClientProvider>
-      </Provider>
-    </div>
+      </div>
+    </Provider>
   )
 }
 

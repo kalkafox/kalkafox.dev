@@ -4,12 +4,13 @@ import { useEffect, useRef } from 'react'
 import images from '@/data/images.json'
 import {
   bgImageAtom,
+  bgPosAtom,
   loadedImagesAtom,
   previousPageAtom,
   showLoadSpinnerAtom,
 } from '@/util/atom'
 import { animated as a, useSpring, useTransition } from '@react-spring/web'
-import { useAtom } from 'jotai'
+import { useAtom, useAtomValue } from 'jotai'
 
 import Image from 'next/image'
 import { useRouter } from 'next/router'
@@ -19,11 +20,15 @@ function Background({
   doResize = true,
   mod = 5000,
   amp = 100,
+  x = 0,
+  y = 0,
 }: {
   scale?: number
   doResize?: boolean
   mod?: number
   amp?: number
+  x?: number
+  y?: number
 }) {
   const router = useRouter()
   const [bgImage, setBgImage] = useAtom(bgImageAtom)
@@ -79,18 +84,23 @@ function Background({
     },
   })
 
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     setImageMoveSpring.start({
+  //       x: Math.cos(Date.now() / mod) * amp,
+  //       y: Math.sin(Date.now() / mod) * amp,
+  //     })
+  //   }, 10)
+  //   return () => {
+  //     clearInterval(interval)
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [])
+
   useEffect(() => {
-    const interval = setInterval(() => {
-      setImageMoveSpring.start({
-        x: Math.cos(Date.now() / mod) * amp,
-        y: Math.sin(Date.now() / mod) * amp,
-      })
-    }, 10)
-    return () => {
-      clearInterval(interval)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+    console.log('ayo')
+    setImageMoveSpring.start({ x, y })
+  }, [x, y])
 
   const imgRef = useRef<HTMLImageElement>(null)
 
@@ -139,7 +149,7 @@ function Background({
             </a.div>
             <div
               className={`fixed -left-24 -top-24 h-[150%] w-[150%] bg-zinc-900/25 ${
-                item === images.bg_1 ? 'backdrop-blur-sm' : ''
+                item === images.bg_1 ? 'backdrop-blur-md' : ''
               }`}
             />
           </>

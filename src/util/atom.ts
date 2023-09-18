@@ -13,3 +13,5 @@ export const previousPageAtom = atom<string>('')
 export const showLoadSpinnerAtom = atom<boolean>(false)
 
 export const fingerprintAtom = atom<string>('')
+
+export const bgPosAtom = atom<Pos>({ x: 0, y: 0 })
