@@ -56,7 +56,7 @@ function App() {
   const [errorDecoration, _] = useAtom(errorDecorationAtom)
 
   useEffect(() => {
-    toast(<FakeError />)
+    toast.warning(<FakeError />)
   }, [errorDecoration])
 
   const [backgroundSpring, backgroundSpringApi] = useSpring(() => ({
@@ -149,7 +149,7 @@ function App() {
         </div>
       </div>
       {/* <TanStackRouterDevtools /> */}
-      <Toaster theme={'dark'} position="top-right" richColors />
+      <Toaster theme={'dark'} position="bottom-right" richColors />
     </ThemeProvider>
   )
 }
