@@ -25,6 +25,8 @@ function Footer() {
   }))
   const [footerSpring, footerSpringApi] = useSpring(() => ({ width: 36 }))
 
+  console.log(open)
+
   useEffect(() => {
     const doAnimation = async () => {
       if (open) {
@@ -154,7 +156,21 @@ function Navbar() {
       }}
     </Link>,
     <Link
-      to={'/about'}
+      to={'/projects'}
+      onClick={() => {
+        setErrorDecoration(false)
+      }}
+      className="transition-all portrait:text-sm"
+      activeProps={{
+        className: 'font-bold',
+      }}
+    >
+      {({ isActive }) => {
+        return <DecorateWrapper isActive={isActive}>Projects</DecorateWrapper>
+      }}
+    </Link>,
+    <Link
+      to={'/contact'}
       className=""
       onClick={() => {
         setErrorDecoration(false)
@@ -166,23 +182,9 @@ function Navbar() {
       {({ isActive }) => {
         return (
           <DecorateWrapper className={`portrait:text-sm`} isActive={isActive}>
-            About
+            Contact
           </DecorateWrapper>
         )
-      }}
-    </Link>,
-    <Link
-      to={'/test'}
-      onClick={() => {
-        setErrorDecoration(false)
-      }}
-      className="transition-all portrait:text-sm"
-      activeProps={{
-        className: 'font-bold',
-      }}
-    >
-      {({ isActive }) => {
-        return <DecorateWrapper isActive={isActive}>Test Route</DecorateWrapper>
       }}
     </Link>,
   ]

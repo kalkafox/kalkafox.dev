@@ -18,7 +18,24 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          //react: ['react', 'react-dom'],
+          react: ['react', 'react-dom', 'react-helmet-async'],
+          'react-router': ['@tanstack/react-router'],
+          //three: ['three'],
+          //'react-fiber': ['@react-three/fiber'],
+          // 'react-spring': ['@react-spring/web', '@react-spring/three'],
+          // shadcn: ['lucide-react'],
+          // iconify: ['@iconify/react'],
+          // lodash: ['lodash'],
+          // radix: [
+          //   'alert-dialog',
+          //   'slot',
+          //   'dropdown-menu',
+          //   'scroll-area',
+          //   'icons',
+          // ].map((s) => `@radix-ui/react-${s}`),
+          // sonner: ['sonner'],
+          // jotai: ['jotai'],
+          // tailwind: ['tailwind-merge'],
         },
       },
     },

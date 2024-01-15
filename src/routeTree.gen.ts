@@ -1,15 +1,15 @@
 import { Route as rootRoute } from './routes/__root'
-import { Route as AboutImport } from './routes/about'
+import { Route as ProjectsImport } from './routes/projects'
+import { Route as ContactImport } from './routes/contact'
 import { Route as IndexImport } from './routes/index'
-import { Route as TestImport } from './routes/test'
 
-const TestRoute = TestImport.update({
-  path: '/test',
+const ProjectsRoute = ProjectsImport.update({
+  path: '/projects',
   getParentRoute: () => rootRoute,
 } as any)
 
-const AboutRoute = AboutImport.update({
-  path: '/about',
+const ContactRoute = ContactImport.update({
+  path: '/contact',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -23,18 +23,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
-    '/about': {
-      preLoaderRoute: typeof AboutImport
+    '/contact': {
+      preLoaderRoute: typeof ContactImport
       parentRoute: typeof rootRoute
     }
-    '/test': {
-      preLoaderRoute: typeof TestImport
+    '/projects': {
+      preLoaderRoute: typeof ProjectsImport
       parentRoute: typeof rootRoute
     }
   }
 }
 export const routeTree = rootRoute.addChildren([
   IndexRoute,
-  AboutRoute,
-  TestRoute,
+  ContactRoute,
+  ProjectsRoute,
 ])

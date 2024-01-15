@@ -1,5 +1,4 @@
 import { Outlet, ScrollRestoration } from '@tanstack/react-router'
-import { TanStackRouterDevtools } from '@tanstack/router-devtools'
 import { useEffect } from 'react'
 import { Toaster, toast } from 'sonner'
 import { ThemeProvider } from './components/theme-provider'
@@ -30,7 +29,7 @@ function FakeError() {
         Oh no! The dom encountered an error!
       </div>
       <AlertDialog>
-        <AlertDialogTrigger className="bg-stone-900 p-2 right-4 rounded-lg absolute">
+        <AlertDialogTrigger className="absolute right-4 rounded-lg bg-stone-900 p-2">
           Show more
         </AlertDialogTrigger>
         <AlertDialogContent>
@@ -39,7 +38,7 @@ function FakeError() {
             <AlertDialogDescription>
               just kidding lol
               <img
-                className="rounded-lg my-4"
+                className="my-4 rounded-lg"
                 src="https://t4.ftcdn.net/jpg/04/20/82/69/360_F_420826948_FtEDTDts86umKGz9Zpybad5XTe4Wmo1s.jpg"
               />
             </AlertDialogDescription>
@@ -57,9 +56,7 @@ function App() {
   const [errorDecoration, _] = useAtom(errorDecorationAtom)
 
   useEffect(() => {
-    if (!errorDecoration) {
-      toast(<FakeError />)
-    }
+    toast(<FakeError />)
   }, [errorDecoration])
 
   const [backgroundSpring, backgroundSpringApi] = useSpring(() => ({
@@ -134,22 +131,24 @@ function App() {
         <link rel="manifest" href="/manifest.json" />
       </Helmet>
       <animated.div
-        className="fixed w-[110%] h-[110%] bg-cover opacity-80 top-0"
+        className="fixed top-0 h-[110%] w-[110%] bg-cover opacity-80"
         style={{ backgroundImage: 'url(bg.jpg)', ...backgroundSpring }}
       />
       <div
-        className={`fixed w-full h-full heropattern-circuitboard-${
-          errorDecoration ? 'red' : 'stone'
-        }-900/50 bg-stone-950/80 top-0`}
+        className={`fixed top-0 h-full w-full bg-stone-950/80 ${
+          errorDecoration
+            ? 'heropattern-circuitboard-red-900/50'
+            : 'heropattern-circuitboard-stone-900/50'
+        }`}
       />
       <ScrollRestoration />
       <Navbar />
       <div className="relative flex justify-center">
-        <div className="bg-stone-900/30 backdrop-blur-lg p-4 w-[50%] rounded-lg portrait:w-[90%] transition-all">
+        <div className="w-[50%] rounded-lg bg-stone-900/30 p-4 backdrop-blur-lg transition-all portrait:w-[90%]">
           <Outlet />
         </div>
       </div>
-      <TanStackRouterDevtools />
+      {/* <TanStackRouterDevtools /> */}
       <Toaster theme={'dark'} position="top-right" richColors />
     </ThemeProvider>
   )
