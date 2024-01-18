@@ -13,6 +13,8 @@ import { Link } from '@tanstack/react-router'
 import { useAtom } from 'jotai'
 import { CSSProperties, ReactNode, useEffect, useState } from 'react'
 
+import Image from './image'
+
 function Footer({ links }: { links: JSX.Element[] }) {
   const [open, setOpen] = useState(false)
 
@@ -24,8 +26,6 @@ function Footer({ links }: { links: JSX.Element[] }) {
     config: { tension: 200 },
   }))
   const [footerSpring, footerSpringApi] = useSpring(() => ({ width: 36 }))
-
-  console.log(open)
 
   useEffect(() => {
     const doAnimation = async () => {
@@ -143,7 +143,7 @@ function Navbar() {
       to="/"
       className="transition-all"
       activeProps={{
-        className: 'font-bold',
+        className: '',
       }}
       onClick={() => {
         setErrorDecoration(false)
@@ -170,7 +170,7 @@ function Navbar() {
       }}
       className="transition-all portrait:text-sm"
       activeProps={{
-        className: 'font-bold',
+        className: '',
       }}
     >
       {({ isActive }) => {
@@ -184,7 +184,7 @@ function Navbar() {
         setErrorDecoration(false)
       }}
       activeProps={{
-        className: 'font-bold',
+        className: '',
       }}
     >
       {({ isActive }) => {
@@ -213,11 +213,9 @@ function Navbar() {
   return (
     <>
       <nav className="relative left-0 right-0 m-auto my-2 flex w-[60%] items-center gap-x-1 rounded-lg bg-neutral-900/50 p-2 backdrop-blur-sm transition-all heropattern-floatingcogs-stone-900/50 portrait:w-[90%]">
-        <animated.img
-          style={imageSpring}
-          className="h-12 w-12 rounded-lg"
-          src={'https://avatars.githubusercontent.com/u/9144208?s=48'}
-        />
+        <animated.div style={imageSpring} className="h-12 w-12 rounded-lg">
+          <Image className="rounded-lg" src={'https://avatars.githubusercontent.com/u/9144208?s=48'} />
+        </animated.div>
         {/* <div className='text-xs w-0'>does the font look different?</div> */}
         {/* <SyntaxHighlighter language='tsx'>{'<Kalka />'}</SyntaxHighlighter> */}
         <animated.div

@@ -3,6 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preload" as="image" href="./fox.gif" />
+    <link rel="preload" as="image" href="./bg.jpg" />
     <link
       rel="preload"
       as="image"
@@ -38,6 +40,38 @@
     <title>kalkafox.dev</title>
   </head>
   <body>
+    <!-- preloads -->
+    <div
+      id="preload"
+      style="
+        top: 0;
+        left: 0;
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        background-color: rgb(12 10 9);
+      "
+    >
+      <!-- Font preload -->
+      <div style="font-family: 'Urbanist'">a</div>
+      <div style="font-family: 'Fira Mono'">a</div>
+    </div>
+
+    <!-- fox gif, for those with slow connections -->
+
+    <img
+      id="fox"
+      style="
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto;
+        position: fixed;
+      "
+      src="./fox.gif"
+    />
+
     <!-- react root -->
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>

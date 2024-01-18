@@ -1,60 +1,17 @@
 import { Outlet, ScrollRestoration } from '@tanstack/react-router'
-import { useEffect } from 'react'
-import { Toaster, toast } from 'sonner'
+import { Suspense, lazy, useEffect } from 'react'
 import { ThemeProvider } from './components/theme-provider'
 
 import { animated, useSpring } from '@react-spring/web'
 import { useAtom } from 'jotai'
-import Navbar from './components/navbar'
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from './components/ui/alert-dialog'
 import { errorDecorationAtom } from './util/atom'
+import range from 'lodash.range'
 
-function FakeError() {
-  return (
-    <>
-      <div className="flex items-center">
-        {/* <Icon className='w-5 h-5' icon='material-symbols:error' /> */}
-        Oh no! The dom encountered an error!
-      </div>
-      <AlertDialog>
-        <AlertDialogTrigger className="absolute right-4 rounded-lg bg-stone-900 p-2">
-          Show more
-        </AlertDialogTrigger>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>haha</AlertDialogTitle>
-            <AlertDialogDescription>
-              just kidding lol
-              <img
-                className="my-4 rounded-lg"
-                src="https://t4.ftcdn.net/jpg/04/20/82/69/360_F_420826948_FtEDTDts86umKGz9Zpybad5XTe4Wmo1s.jpg"
-              />
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogAction>OK</AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    </>
-  )
-}
+const Navbar = lazy(() => import('./components/navbar'))
+const Toaster = lazy(() => import('./components/toast'))
 
 function App() {
   const [errorDecoration, _] = useAtom(errorDecorationAtom)
-
-  useEffect(() => {
-    toast.warning(<FakeError />)
-  }, [])
 
   const [backgroundSpring, backgroundSpringApi] = useSpring(() => ({
     x: 0,
@@ -103,14 +60,30 @@ function App() {
         }`}
       />
       <ScrollRestoration />
-      <Navbar />
+      <Suspense
+        fallback={
+          <nav className="relative left-0 right-0 m-auto my-2 flex w-[60%] items-center gap-x-1 rounded-lg bg-neutral-900/50 p-2 backdrop-blur-sm transition-all heropattern-floatingcogs-stone-900/50 portrait:w-[90%]">
+            <div className="h-12 w-12 animate-pulse rounded-lg bg-stone-900" />
+            {range(3).map((i) => (
+              <div
+                key={i}
+                className="h-6 w-20 animate-pulse rounded-lg bg-stone-900"
+              />
+            ))}
+          </nav>
+        }
+      >
+        <Navbar />
+      </Suspense>
       <div className="relative flex justify-center">
         <div className="w-[50%] rounded-lg bg-stone-900/30 p-4 backdrop-blur-lg transition-all portrait:w-[90%]">
           <Outlet />
         </div>
       </div>
       {/* <TanStackRouterDevtools /> */}
-      <Toaster theme={'dark'} position="bottom-right" richColors />
+      <Suspense>
+        <Toaster />
+      </Suspense>
     </ThemeProvider>
   )
 }
