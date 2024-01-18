@@ -13,7 +13,7 @@ import { Link } from '@tanstack/react-router'
 import { useAtom } from 'jotai'
 import { CSSProperties, ReactNode, useEffect, useState } from 'react'
 
-function Footer() {
+function Footer({ links }: { links: JSX.Element[] }) {
   const [open, setOpen] = useState(false)
 
   const [textRender, setTextRender] = useState(false)
@@ -63,10 +63,18 @@ function Footer() {
           setOpen(isOpen)
         }}
       >
+        {/* {window.innerWidth > 850 ? links : links.slice(0, -1)} */}
         <DropdownMenuTrigger className="relative">
           <Icon className="h-5 w-5" icon="ci:hamburger-lg" />
         </DropdownMenuTrigger>
         <DropdownMenuContent>
+          {window.innerWidth < 850
+            ? links
+                .slice(-1)
+                .map((el, i) => (
+                  <DropdownMenuItem key={i}>{el}</DropdownMenuItem>
+                ))
+            : null}
           <DropdownMenuItem>
             <a
               className="flex items-center gap-x-2"
@@ -100,7 +108,7 @@ function Navbar() {
 
   const [errorDecoration, setErrorDecoration] = useAtom(errorDecorationAtom)
 
-  const [_, setWindowSize] = useState({ width: 0, height: 0 })
+  const [windowSize, setWindowSize] = useState({ width: 0, height: 0 })
 
   const imageSpring = useSpring({
     width: 48,
@@ -147,7 +155,7 @@ function Navbar() {
           <DecorateWrapper
             isActive={isActive}
             className={` transition-all max-lg:text-sm max-sm:text-sm portrait:text-sm ${
-              smolNav ? 'text-lg' : 'text-3xl'
+              smolNav ? 'max-2xl:text-lg' : 'max-2xl:text-3xl'
             }`}
           >
             Kalka
@@ -217,7 +225,11 @@ function Navbar() {
           className="mx-2 flex items-center gap-x-2"
         >
           {/* {windowSize.width < 800 ? links.slice(0, -1) : links.map((e) => e)} */}
-          {...links}
+          {(windowSize.width > 850 ? links : links.slice(0, -1)).map(
+            (el, i) => (
+              <div key={i}>{el}</div>
+            ),
+          )}
           {/* <Link
             to='/'
             className='transition-all'
@@ -285,7 +297,7 @@ function Navbar() {
             </span>
           ) : null}
         </animated.div>
-        <Footer />
+        <Footer links={links} />
       </nav>
     </>
   )
