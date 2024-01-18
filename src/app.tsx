@@ -2,6 +2,8 @@ import { Outlet, ScrollRestoration } from '@tanstack/react-router'
 import { Suspense, lazy, useEffect } from 'react'
 import { ThemeProvider } from './components/theme-provider'
 
+import { SpeedInsights } from '@vercel/speed-insights/react'
+
 import { animated, useSpring } from '@react-spring/web'
 import { useAtom } from 'jotai'
 import { errorDecorationAtom } from './util/atom'
@@ -84,6 +86,7 @@ function App() {
       <Suspense>
         <Toaster />
       </Suspense>
+      <SpeedInsights />
     </ThemeProvider>
   )
 }
