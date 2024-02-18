@@ -4,9 +4,6 @@
     width: 1050px;
     position: absolute;
     background-repeat: no-repeat;
-    -webkit-animation: Callback 600s infinite;
-    -webkit-animation-delay: 0s;
-    -webkit-animation-fill-mode: forwards;
 }
 
 .custom.disconnected {
