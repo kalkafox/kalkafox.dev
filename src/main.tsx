@@ -1,6 +1,6 @@
 import '@fontsource/fira-mono'
 import '@fontsource/urbanist'
-import { NotFoundRoute, Router, RouterProvider } from '@tanstack/react-router'
+import { createRouter, RouterProvider } from '@tanstack/react-router'
 import { useSetAtom } from 'jotai'
 import React, { Suspense, lazy, useEffect } from 'react'
 import ReactDOM from 'react-dom/client'
@@ -10,11 +10,6 @@ import { routeTree } from './routeTree.gen.ts'
 import { errorDecorationAtom } from './util/atom.ts'
 
 const Cube = lazy(() => import('@/components/cube'))
-
-const notFoundRoute = new NotFoundRoute({
-  getParentRoute: () => routeTree,
-  component: () => <NotFoundComponent />,
-})
 
 function NotFoundComponent() {
   const setDecoration = useSetAtom(errorDecorationAtom)
@@ -37,8 +32,8 @@ function NotFoundComponent() {
   )
 }
 
-const router = new Router({
-  notFoundRoute,
+const router = createRouter({
+  defaultNotFoundComponent: NotFoundComponent,
   routeTree,
   defaultPreload: 'intent',
 })
@@ -49,16 +44,20 @@ declare module '@tanstack/react-router' {
   }
 }
 
-const rootDom = document.getElementById('root')
+const rootElement = document.getElementById('root')!
+if (!rootElement.innerHTML) {
+  const root = ReactDOM.createRoot(rootElement)
 
-if (!rootDom) {
-  throw new Error('No root dom found!')
+  const progressBg = document.getElementById('progress-bg')!
+  const progressFg = document.getElementById('progress-fg')!
+
+  progressFg.style.width = progressBg.style.width
+
+  root.render(
+    <React.StrictMode>
+      <HelmetProvider>
+        <RouterProvider router={router} />
+      </HelmetProvider>
+    </React.StrictMode>,
+  )
 }
-
-ReactDOM.createRoot(rootDom).render(
-  <React.StrictMode>
-    <HelmetProvider>
-      <RouterProvider router={router} />
-    </HelmetProvider>
-  </React.StrictMode>,
-)

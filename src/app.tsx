@@ -21,7 +21,7 @@ function App() {
   }))
 
   useEffect(() => {
-    const mult = 0.01
+    const mult = 0.005
 
     const mouseMove = (e: MouseEvent) => {
       if (window.scrollY > 0) return
@@ -41,6 +41,19 @@ function App() {
     window.addEventListener('mousemove', mouseMove)
 
     window.addEventListener('mouseout', mouseLeave)
+
+    // Delete the preload elements once we're ready
+    const elementsToRemove = ['fox', 'preload', 'progress-fg', 'progress-bg']
+
+    elementsToRemove.forEach((val) => {
+      const elem = document.getElementById(val)
+
+      if (!elem) {
+        return
+      }
+
+      elem.remove()
+    })
 
     return () => {
       window.removeEventListener('mousemove', mouseMove)

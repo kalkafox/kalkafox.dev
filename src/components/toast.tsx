@@ -47,10 +47,6 @@ function FakeError() {
 function Toast() {
   useEffect(() => {
     toast.warning(<FakeError />)
-
-    // Delete the fox gif element once we're ready
-    document.getElementById('fox')?.remove()
-    document.getElementById('preload')?.remove()
   }, [])
 
   return <Toaster theme={'dark'} position="bottom-right" richColors />

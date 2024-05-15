@@ -214,7 +214,10 @@ function Navbar() {
     <>
       <nav className="relative left-0 right-0 m-auto my-2 flex w-[60%] items-center gap-x-1 rounded-lg bg-neutral-900/50 p-2 backdrop-blur-sm transition-all heropattern-floatingcogs-stone-900/50 portrait:w-[90%]">
         <animated.div style={imageSpring} className="h-12 w-12 rounded-lg">
-          <Image className="rounded-lg" src={'https://avatars.githubusercontent.com/u/9144208?s=48'} />
+          <Image
+            className="rounded-lg"
+            src={'https://avatars.githubusercontent.com/u/9144208?s=48'}
+          />
         </animated.div>
         {/* <div className='text-xs w-0'>does the font look different?</div> */}
         {/* <SyntaxHighlighter language='tsx'>{'<Kalka />'}</SyntaxHighlighter> */}

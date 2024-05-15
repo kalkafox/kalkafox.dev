@@ -40,7 +40,6 @@
     <title>kalkafox.dev</title>
   </head>
   <body>
-    <!-- preloads -->
     <div
       id="preload"
       style="
@@ -49,16 +48,13 @@
         position: fixed;
         width: 100%;
         height: 100%;
-        background-color: rgb(12 10 9);
+        background-color: rgb(24, 23, 22);
       "
     >
       <!-- Font preload -->
       <div style="font-family: 'Urbanist'">a</div>
       <div style="font-family: 'Fira Mono'">a</div>
     </div>
-
-    <!-- fox gif, for those with slow connections -->
-
     <img
       id="fox"
       style="
@@ -71,8 +67,36 @@
       "
       src="./fox.gif"
     />
-
-    <!-- react root -->
+    <div
+      id="progress-bg"
+      style="
+        top: 84px;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        margin: auto;
+        width: 80px;
+        height: 8px;
+        border-radius: 10%;
+        background-color: gray;
+        position: fixed;
+      "
+    >
+      <div
+        id="progress-fg"
+        style="
+          top: 84px;
+          left: 0;
+          bottom: 0;
+          right: 0;
+          width: 0px;
+          height: 8px;
+          border-radius: 10%;
+          background-color: white;
+          transition: all 0.5s;
+        "
+      ></div>
+    </div>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
