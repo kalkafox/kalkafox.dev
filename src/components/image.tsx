@@ -22,13 +22,23 @@ const Image = ({ src, className }: { src: string; className?: string }) => {
 
   useEffect(() => {
     const setImage = async () => {
+      const downloadStart = Date.now()
       const res = await ky(src, {
         onDownloadProgress: (progress, _) => {
-          if (progress.percent === 1) {
-            imageSpringApi.start({
-              opacity: 1,
-              scale: 1,
-            })
+          if (progress.percent === 1 || progress.transferredBytes === progress.totalBytes) {
+            const downloadEnd = Date.now()
+
+            if (downloadEnd - downloadStart > 500) {
+              imageSpringApi.start({
+                opacity: 1,
+                scale: 1,
+              })
+            } else {
+              imageSpringApi.set({
+                opacity: 1,
+                scale: 1,
+              })
+            }
           }
           setProgress(progress)
         },
