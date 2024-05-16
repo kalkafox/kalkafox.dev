@@ -14,18 +14,19 @@ import { useAtom } from 'jotai'
 import { CSSProperties, ReactNode, useEffect, useState } from 'react'
 
 import Image from './image'
+import { getUserAvatarURL } from '@/util/gravatar'
 
 function Footer({ links }: { links: JSX.Element[] }) {
   const [open, setOpen] = useState(false)
 
-  const [textRender, setTextRender] = useState(false)
+  const [_textRender, setTextRender] = useState(false)
 
   const [textSpring, textSpringApi] = useSpring(() => ({
     x: 10,
     opacity: 0,
     config: { tension: 200 },
   }))
-  const [footerSpring, footerSpringApi] = useSpring(() => ({ width: 36 }))
+  const [footerSpring, _footerSpringApi] = useSpring(() => ({ width: 36 }))
 
   useEffect(() => {
     const doAnimation = async () => {
@@ -36,12 +37,12 @@ function Footer({ links }: { links: JSX.Element[] }) {
           opacity: 1,
         })
 
-        footerSpringApi.start({
-          width: 135,
-        })
+        // footerSpringApi.start({
+        //   width: 135,
+        // })
       } else {
         textSpring.x.start(10)
-        footerSpring.width.start(36)
+        //footerSpring.width.start(36)
         await textSpring.opacity.start(0)
         setTextRender(false)
       }
@@ -94,11 +95,11 @@ function Footer({ links }: { links: JSX.Element[] }) {
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-      {textRender ? (
+      {/* {textRender ? (
         <animated.div className="absolute -z-10 w-20" style={textSpring}>
           <DecorateWrapper className="text-sm font-bold">Kalka</DecorateWrapper>
         </animated.div>
-      ) : null}
+      ) : null} */}
     </animated.div>
   )
 }
@@ -216,7 +217,8 @@ function Navbar() {
         <animated.div style={imageSpring} className="h-12 w-12 rounded-lg">
           <Image
             className="rounded-lg"
-            src={'https://avatars.githubusercontent.com/u/9144208?s=48'}
+            //src={'https://avatars.githubusercontent.com/u/9144208?s=48'}
+            src={getUserAvatarURL('kalka2088@gmail.com')}
           />
         </animated.div>
         {/* <div className='text-xs w-0'>does the font look different?</div> */}

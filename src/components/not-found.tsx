@@ -1,4 +1,5 @@
 import { errorDecorationAtom } from '@/util/atom'
+import { Progress } from '@radix-ui/react-progress'
 import { useSetAtom } from 'jotai'
 import { Suspense, lazy, useEffect } from 'react'
 
@@ -17,7 +18,7 @@ export default function NotFoundComponent() {
         <p className="font-['Fira_Mono'] text-4xl">404</p>
 
         <p>Resource not found.</p>
-        <Suspense>
+        <Suspense fallback={<Progress value={100} />}>
           <Cube />
         </Suspense>
       </div>
