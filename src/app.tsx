@@ -65,7 +65,7 @@ function App() {
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       <animated.div
         className="fixed top-0 h-[110%] w-[110%] bg-cover opacity-80"
-        style={{ backgroundImage: 'url(bg.jpg)', ...backgroundSpring }}
+        style={{ backgroundImage: 'url(bg2.jpg)', ...backgroundSpring }}
       />
       <div
         className={`fixed top-0 h-full w-full bg-stone-950/80 ${

@@ -18,11 +18,11 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          react: ['react', 'react-dom', 'react-helmet-async'],
-          'react-router': ['@tanstack/react-router'],
-          three: ['three'],
+          //react: ['react', 'react-dom', 'react-helmet-async'],
+          //'react-router': ['@tanstack/react-router'],
+          //three: ['three'],
           //'react-fiber': ['@react-three/fiber'],
-          'react-spring': ['@react-spring/web', '@react-spring/three'],
+          //'react-spring': ['@react-spring/web', '@react-spring/three'],
           // shadcn: ['lucide-react'],
           // iconify: ['@iconify/react'],
           // lodash: ['lodash'],

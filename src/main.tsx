@@ -1,36 +1,13 @@
 import '@fontsource/fira-mono'
 import '@fontsource/urbanist'
 import { createRouter, RouterProvider } from '@tanstack/react-router'
-import { useSetAtom } from 'jotai'
-import React, { Suspense, lazy, useEffect } from 'react'
+import React, { lazy } from 'react'
 import ReactDOM from 'react-dom/client'
 import { HelmetProvider } from 'react-helmet-async'
 import './index.css'
 import { routeTree } from './routeTree.gen.ts'
-import { errorDecorationAtom } from './util/atom.ts'
 
-const Cube = lazy(() => import('@/components/cube'))
-
-function NotFoundComponent() {
-  const setDecoration = useSetAtom(errorDecorationAtom)
-
-  useEffect(() => {
-    setDecoration(true)
-  }, [])
-
-  return (
-    <>
-      <div className="flex flex-col items-center justify-center">
-        <p className="font-['Fira_Mono'] text-4xl">404</p>
-
-        <p>Resource not found.</p>
-        <Suspense>
-          <Cube />
-        </Suspense>
-      </div>
-    </>
-  )
-}
+const NotFoundComponent = lazy(() => import('@/components/not-found.tsx'))
 
 const router = createRouter({
   defaultNotFoundComponent: NotFoundComponent,
