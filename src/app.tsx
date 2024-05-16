@@ -1,4 +1,8 @@
-import { Outlet, ScrollRestoration } from '@tanstack/react-router'
+import {
+  Outlet,
+  ScrollRestoration,
+  useRouterState,
+} from '@tanstack/react-router'
 import { Suspense, lazy, useEffect } from 'react'
 import { ThemeProvider } from './components/theme-provider'
 
@@ -14,6 +18,7 @@ const Toaster = lazy(() => import('./components/toast'))
 
 function App() {
   const [errorDecoration, _] = useAtom(errorDecorationAtom)
+  const routerState = useRouterState()
 
   const [backgroundSpring, backgroundSpringApi] = useSpring(() => ({
     x: 0,
@@ -43,23 +48,29 @@ function App() {
     window.addEventListener('mouseout', mouseLeave)
 
     // Delete the preload elements once we're ready
-    const elementsToRemove = ['fox', 'preload', 'progress-fg', 'progress-bg']
+    // const elementsToRemove = ['fox', 'preload', 'progress-fg', 'progress-bg']
 
-    elementsToRemove.forEach((val) => {
-      const elem = document.getElementById(val)
+    // elementsToRemove.forEach((val) => {
+    //   const elem = document.getElementById(val)
 
-      if (!elem) {
-        return
-      }
+    //   if (!elem) {
+    //     return
+    //   }
 
-      elem.remove()
-    })
+    //   elem.remove()
+    // })
 
     return () => {
       window.removeEventListener('mousemove', mouseMove)
       window.removeEventListener('mouseout', mouseLeave)
     }
   }, [])
+
+  useEffect(() => {
+    if (routerState.status === 'idle') {
+      document.getElementById('preload')?.remove()
+    }
+  }, [routerState.status])
 
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
