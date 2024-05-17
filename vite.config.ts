@@ -24,7 +24,7 @@ export default defineConfig({
           //'react-fiber': ['@react-three/fiber'],
           //'react-spring': ['@react-spring/web', '@react-spring/three'],
           // shadcn: ['lucide-react'],
-          // iconify: ['@iconify/react'],
+          // iconify: ['@iconify-icon/react'],
           // lodash: ['lodash'],
           // radix: [
           //   'alert-dialog',
