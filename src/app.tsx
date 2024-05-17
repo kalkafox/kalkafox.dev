@@ -68,7 +68,11 @@ function App() {
 
   useEffect(() => {
     if (routerState.status === 'idle') {
-      document.getElementById('preload')?.remove()
+      const preloadElem = document.getElementById('preload')!
+
+      if (preloadElem) {
+        preloadElem.remove()
+      }
     }
   }, [routerState.status])
 

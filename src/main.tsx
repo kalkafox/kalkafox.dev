@@ -25,6 +25,9 @@ const rootElement = document.getElementById('root')!
 if (!rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement)
 
+  document.getElementById('fox')!.style.opacity = '0'
+  document.getElementById('progress-bg')!.style.opacity = '0'
+
   const progressBg = document.getElementById('progress-bg')!
   const progressFg = document.getElementById('progress-fg')!
 
