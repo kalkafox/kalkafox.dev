@@ -5,9 +5,20 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { errorDecorationAtom } from '@/util/atom'
-import moonPhase from '@/util/moon-phase'
-import { Icon } from '@iconify/react'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
+import { Switch } from '@/components/ui/switch'
+import {
+  errorDecorationAtom,
+  nerdStatsAtom,
+  reducedMotionAtom,
+} from '@/util/atom'
+import _moonPhase from '@/util/moon-phase'
+import { Icon } from '@iconify-icon/react'
 import { animated, useSpring } from '@react-spring/web'
 import { Link } from '@tanstack/react-router'
 import { useAtom } from 'jotai'
@@ -18,6 +29,11 @@ import { getUserAvatarURL } from '@/util/gravatar'
 
 function Footer({ links }: { links: JSX.Element[] }) {
   const [open, setOpen] = useState(false)
+  const [hoverCardOpen, setHoverCardOpen] = useState(false)
+
+  const [reducedMotion, setReducedMotion] = useAtom(reducedMotionAtom)
+
+  const [nerdStats, _setNerdStats] = useAtom(nerdStatsAtom)
 
   const [_textRender, setTextRender] = useState(false)
 
@@ -27,6 +43,15 @@ function Footer({ links }: { links: JSX.Element[] }) {
     config: { tension: 200 },
   }))
   const [footerSpring, _footerSpringApi] = useSpring(() => ({ width: 36 }))
+
+  // const foxData = useQuery({
+  //   queryKey: ['foxImg'],
+  //   queryFn: async () => {
+  //     const res = await ky('https://randomfox.ca/floof')
+
+  //     return await res.json<FoxData>()
+  //   },
+  // })
 
   useEffect(() => {
     const doAnimation = async () => {
@@ -65,10 +90,10 @@ function Footer({ links }: { links: JSX.Element[] }) {
         }}
       >
         {/* {window.innerWidth > 850 ? links : links.slice(0, -1)} */}
-        <DropdownMenuTrigger className="relative">
-          <Icon className="h-5 w-5" icon="ci:hamburger-lg" />
+        <DropdownMenuTrigger>
+          <Icon width={18} height={18} icon="ci:hamburger-lg" inline={true} />
         </DropdownMenuTrigger>
-        <DropdownMenuContent>
+        <DropdownMenuContent onCloseAutoFocus={(e) => e.preventDefault()}>
           {window.innerWidth < 850
             ? links
                 .slice(-1)
@@ -82,17 +107,85 @@ function Footer({ links }: { links: JSX.Element[] }) {
               href="https://github.com/kalkafox/kalkafox.dev"
               target="_blank"
             >
-              <Icon className="h-5 w-5" icon="mdi:github" />
+              <Icon width={22} icon="mdi:github" inline={true} />
               <span>View project on GitHub</span>
             </a>
           </DropdownMenuItem>
-          <DropdownMenuSeparator />
+          {/* <DropdownMenuSeparator />
           <DropdownMenuItem className="flex items-center justify-center gap-x-2">
             <a href="https://www.moongiant.com/phase/today/" target="_blank">
               Current moon phase:{' '}
               <Icon className="inline h-5 w-5" icon={moonPhase()} />
             </a>
+          </DropdownMenuItem> */}
+          <DropdownMenuItem
+            onSelect={(e) => e.preventDefault()}
+            className="flex items-center gap-x-2"
+          >
+            <Icon width={22} icon="mdi:motion" inline={true} />
+            <span>Reduce motion</span>
+            <Switch
+              checked={reducedMotion}
+              onCheckedChange={(e) => setReducedMotion(e)}
+            />
           </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <TooltipProvider>
+            <Tooltip
+              open={hoverCardOpen}
+              onOpenChange={(e) => {
+                setHoverCardOpen(e)
+              }}
+            >
+              <TooltipTrigger
+                onClick={(e) => e.preventDefault()}
+                onSelect={(e) => e.preventDefault()}
+              >
+                <DropdownMenuItem
+                  onClick={(e) => e.preventDefault()}
+                  onSelect={(e) => {
+                    e.preventDefault()
+                  }}
+                  className="flex items-center gap-x-2"
+                >
+                  <Icon
+                    width={22}
+                    icon="material-symbols:info-outline"
+                    inline={true}
+                  />
+                  Nerd stats
+                </DropdownMenuItem>
+              </TooltipTrigger>
+              <TooltipContent
+                side={'bottom'}
+                onSelect={(e) => e.preventDefault()}
+              >
+                <div>
+                  {nerdStats.timeTo3DRender && nerdStats.timeTo3DRender !== 0
+                    ? 'time to 3d render: ' + nerdStats.timeTo3DRender + 'ms'
+                    : ''}
+                </div>
+                <div>
+                  {nerdStats.timeToReactRender &&
+                  nerdStats.timeToReactRender !== 0
+                    ? 'time to react render: ' +
+                      nerdStats.timeToReactRender +
+                      'ms'
+                    : ''}
+                </div>
+                <div>
+                  {nerdStats.timeToLoadReact && nerdStats.timeToLoadReact !== 0
+                    ? 'time to load react: ' + nerdStats.timeToLoadReact + 'ms'
+                    : ''}
+                </div>
+                <div>
+                  {nerdStats.timeToPageLoad && nerdStats.timeToPageLoad !== 0
+                    ? 'time to page load: ' + nerdStats.timeToPageLoad + 'ms'
+                    : ''}
+                </div>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </DropdownMenuContent>
       </DropdownMenu>
       {/* {textRender ? (

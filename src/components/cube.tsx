@@ -5,21 +5,35 @@ import { Canvas, useFrame } from '@react-three/fiber'
 import type { Mesh } from 'three'
 
 import { animated as a, useSpring } from '@react-spring/three'
+import { useAtom } from 'jotai'
+import { nerdStatsAtom } from '@/util/atom'
 
 function WireframeBox(props: any) {
   const mesh = useRef<Mesh>(null)
 
   const [active, setActive] = useState(false)
 
-  useFrame((_, delta) => {
+  const [nerdStats, setNerdStats] = useAtom(nerdStatsAtom)
+
+  const [firstFrame, setFirstFrame] = useState(false)
+
+  useFrame((_rootState, delta) => {
     if (mesh.current) {
+      if (!firstFrame) {
+        setNerdStats((e) => ({
+          ...e,
+          timeTo3DRender: Date.now() - nerdStats.initialTime,
+        }))
+        setFirstFrame(true)
+      }
+
       mesh.current.rotation.y += 0.5 * delta
       mesh.current.rotation.x = Math.cos(mesh.current.rotation.y) * 0.5
     }
   })
 
   const { scale } = useSpring({
-    scale: active ? 3 : 1,
+    scale: 3,
     config: { tension: 500 },
   })
 
@@ -39,7 +53,7 @@ function WireframeBox(props: any) {
 
 export default function WireframeBoxComponent() {
   return (
-    <Canvas>
+    <Canvas gl={{ preserveDrawingBuffer: true }}>
       <WireframeBox position={[0, 0, 0]} scale={[3, 3, 3]} color={'#aaa'} />
     </Canvas>
   )

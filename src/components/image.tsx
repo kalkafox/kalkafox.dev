@@ -25,7 +25,10 @@ const Image = ({ src, className }: { src: string; className?: string }) => {
       const downloadStart = Date.now()
       const res = await ky(src, {
         onDownloadProgress: (progress, _) => {
-          if (progress.percent === 1 || progress.transferredBytes === progress.totalBytes) {
+          if (
+            progress.percent === 1 ||
+            progress.transferredBytes === progress.totalBytes
+          ) {
             const downloadEnd = Date.now()
 
             if (downloadEnd - downloadStart > 500) {

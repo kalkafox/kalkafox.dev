@@ -1,6 +1,6 @@
 import { createLazyFileRoute } from '@tanstack/react-router'
 
-import { Icon } from '@iconify/react'
+import { Icon } from '@iconify-icon/react'
 import { PrideFlag } from '@/components/pride-flag'
 
 export const Route = createLazyFileRoute('/')({
