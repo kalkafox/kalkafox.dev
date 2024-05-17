@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preload" as="image" href="./fox.gif" />
+    <link rel="preload" as="image" href="./bg2.jpg" />
+    <!-- <link rel="preload" as="script" href="/src/main.tsx" /> -->
+    <meta name="msapplication-TileColor" content="#171717" />
+    <meta name="theme-color" content="#171717" />
+    <meta name="description" content="Hi, I'm a nerd that does stuffs." />
+    <meta property="og:title" content="kalkafox.dev" />
+    <meta
+      property="og:description"
+      content="Hi, I'm a nerd that does stuffs."
+    />
+    <meta property="og:image" content="https://i.imgur.com/700kOOU.jpg" />
+    <meta property="og:url" content="https://kalkafox.dev" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="kalkafox" />
+    <meta property="og:locale" content="en_US" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@kalkafox" />
+    <meta name="twitter:creator" content="@kalkafox" />
+    <meta name="twitter:title" content="kalkafox.dev" />
+    <meta
+      name="twitter:description"
+      content="Hi, I'm a nerd that does stuffs."
+    />
+    <meta name="twitter:image" content="https://i.imgur.com/700kOOU.jpg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="manifest" href="/manifest.json" />
+    <title>kalkafox.dev</title>
+  </head>
+  <body>
+    <div
+      id="preload"
+      style="
+        top: 0;
+        left: 0;
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(
+          circle,
+          rgba(10, 10, 10, 1) 0%,
+          rgba(20, 20, 20, 1) 100%
+        );
+        transition: 0.5s all;
+      "
+    >
+      <!-- Font preload -->
+      <div style="font-family: 'Urbanist'">a</div>
+      <div style="font-family: 'Fira Mono'">a</div>
+
+      <img
+        id="fox"
+        style="
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          margin: auto;
+          position: fixed;
+          transition: 0.5s all;
+        "
+        src="./fox.gif"
+      />
+      <div
+        id="progress-bg"
+        style="
+          top: 84px;
+          left: 0;
+          bottom: 0;
+          right: 0;
+          margin: auto;
+          width: 80px;
+          height: 8px;
+          border-radius: 10%;
+          background-color: gray;
+          position: fixed;
+          transition: 0.5s all;
+        "
+      >
+        <div
+          id="progress-fg"
+          style="
+            top: 84px;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            width: 0px;
+            height: 8px;
+            border-radius: 10%;
+            background-color: white;
+            transition: all 0.5s;
+          "
+        ></div>
+      </div>
+    </div>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
