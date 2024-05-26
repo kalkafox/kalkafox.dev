@@ -1,6 +1,7 @@
 import { useLayoutEffect, useRef, useState } from 'react'
 
 import { Canvas, useFrame } from '@react-three/fiber'
+import { CameraControls } from '@react-three/drei'
 
 import type { Mesh } from 'three'
 
@@ -52,9 +53,13 @@ function WireframeBox(props: any) {
 }
 
 export default function WireframeBoxComponent() {
+  const cameraControlRef = useRef<CameraControls | null>(null)
   return (
-    <Canvas gl={{ preserveDrawingBuffer: true }}>
-      <WireframeBox position={[0, 0, 0]} scale={[3, 3, 3]} color={'#aaa'} />
-    </Canvas>
+    <>
+      <Canvas>
+        <CameraControls ref={cameraControlRef} />
+        <WireframeBox position={[0, 0, 0]} scale={[3, 3, 3]} color={'#aaa'} />
+      </Canvas>
+    </>
   )
 }
