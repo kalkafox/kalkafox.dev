@@ -1,5 +1,6 @@
 import { WritableAtom, atom, createStore } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
+import { RefObject } from 'react'
 
 export function atomWithToggleAndStorage(
   key: string,
@@ -24,7 +25,13 @@ export const errorDecorationAtom = atom(false)
 
 export const nerdStatsAtom = atom<NerdStats>({ initialTime: Date.now() })
 
+export const navOffsetAtom = atom(0)
+
+export const renderReadyAtom = atom(false)
+
 export const reducedMotionAtom = atomWithToggleAndStorage(
   'reducedMotion',
   false,
 )
+
+export const docRefAtom = atom<RefObject<HTMLCanvasElement>>()

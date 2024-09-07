@@ -14,15 +14,16 @@ import {
 import { Switch } from '@/components/ui/switch'
 import {
   errorDecorationAtom,
+  navOffsetAtom,
   nerdStatsAtom,
   reducedMotionAtom,
 } from '@/util/atom'
 import _moonPhase from '@/util/moon-phase'
 import { Icon } from '@iconify-icon/react'
-import { animated, useSpring } from '@react-spring/web'
+import { animated, SpringValue, useSpring } from '@react-spring/web'
 import { Link } from '@tanstack/react-router'
 import { useAtom } from 'jotai'
-import { CSSProperties, ReactNode, useEffect, useState } from 'react'
+import { CSSProperties, ReactNode, useEffect, useRef, useState } from 'react'
 
 import Image from './image'
 import { getUserAvatarURL } from '@/util/gravatar'
@@ -197,40 +198,53 @@ function Footer({ links }: { links: JSX.Element[] }) {
   )
 }
 
-function Navbar() {
-  const [smolNav, setSmolNav] = useState(false)
+function Navbar({
+  style,
+}: {
+  style: {
+    opacity: SpringValue<number>
+    scale: SpringValue<number>
+  }
+}) {
+  const navRef = useRef<HTMLDivElement>(null)
 
   const [errorDecoration, setErrorDecoration] = useAtom(errorDecorationAtom)
 
+  const [imageSize, setImageSize] = useState({ width: 48, height: 48 })
+
   const [windowSize, setWindowSize] = useState({ width: 0, height: 0 })
 
-  const imageSpring = useSpring({
-    width: 48,
-    height: 48,
-  })
+  const [imageSpring, imageSpringApi] = useSpring(() => ({
+    width: imageSize.width,
+    height: imageSize.height,
+  }))
 
   const linkSpring = useSpring({
     x: 0,
   })
 
-  useEffect(() => {
-    const bSmolNav = smolNav && window.scrollY > 0
-    const imgSize = bSmolNav ? 24 : 48
-    imageSpring.width.start(imgSize)
-    imageSpring.height.start(imgSize)
-  }, [smolNav])
+  const [_navOffset, setNavOffset] = useAtom(navOffsetAtom)
 
-  useEffect(() => {
-    const navFunc = () => {
-      setSmolNav(window.scrollY > 0)
+  const [smolNav, setSmolNav] = useState(false)
+
+  const postLinkClick = () => {
+    console.log('hi')
+
+    setImageSize({ width: 48, height: 48 })
+
+    window.scrollTo({ top: 0 })
+
+    if (smolNav) {
+      imageSpringApi.set({
+        width: 48,
+        height: 48,
+      })
     }
 
-    window.addEventListener('scroll', navFunc)
+    setSmolNav(false)
 
-    return () => {
-      window.removeEventListener('scroll', navFunc)
-    }
-  }, [])
+    setErrorDecoration(false)
+  }
 
   const links = [
     <Link
@@ -240,7 +254,7 @@ function Navbar() {
         className: '',
       }}
       onClick={() => {
-        setErrorDecoration(false)
+        postLinkClick()
       }}
       activeOptions={{ exact: true }}
     >
@@ -248,9 +262,7 @@ function Navbar() {
         return (
           <DecorateWrapper
             isActive={isActive}
-            className={` transition-all max-lg:text-sm max-sm:text-sm portrait:text-sm ${
-              smolNav ? 'max-2xl:text-lg' : 'max-2xl:text-3xl'
-            }`}
+            className={`transition-all max-lg:text-sm max-sm:text-sm portrait:text-sm`}
           >
             Kalka
           </DecorateWrapper>
@@ -260,7 +272,7 @@ function Navbar() {
     <Link
       to={'/projects'}
       onClick={() => {
-        setErrorDecoration(false)
+        postLinkClick()
       }}
       className="transition-all portrait:text-sm"
       activeProps={{
@@ -275,7 +287,7 @@ function Navbar() {
       to={'/contact'}
       className=""
       onClick={() => {
-        setErrorDecoration(false)
+        postLinkClick()
       }}
       activeProps={{
         className: '',
@@ -292,6 +304,70 @@ function Navbar() {
   ]
 
   useEffect(() => {
+    const bSmolNav = smolNav
+
+    const imgSize = bSmolNav ? 24 : 48
+    // imageSpring.width.start(imgSize)
+    // imageSpring.height.start(imgSize)
+
+    if (bSmolNav) {
+      setNavOffset(navRef.current?.clientHeight!)
+      imageSpringApi.start({
+        width: 24,
+        height: 24,
+        // onChange: () => {
+        //   setNavOffset(navRef.current?.clientHeight!)
+        // },
+      })
+      setImageSize({
+        width: 24,
+        height: 24,
+      })
+    } else {
+      imageSpringApi.start({
+        width: 48,
+        height: 48,
+        // onStart: () => {
+        //   console.log('hi this happened')
+        // },
+      })
+      // setImageSize({
+      //   width: 48,
+      //   height: 48,
+      // })
+    }
+
+    setImageSize({ width: imgSize, height: imgSize })
+  }, [smolNav])
+
+  useEffect(() => {
+    setNavOffset(navRef.current?.clientHeight!)
+
+    const navFunc = () => {
+      if (window.scrollY > 0) {
+        setImageSize({
+          width: 24,
+          height: 24,
+        })
+        setSmolNav(true)
+      }
+      if (window.scrollY === 0) {
+        setImageSize({
+          width: 48,
+          height: 48,
+        })
+        setSmolNav(false)
+      }
+    }
+
+    window.addEventListener('scroll', navFunc)
+
+    return () => {
+      window.removeEventListener('scroll', navFunc)
+    }
+  }, [])
+
+  useEffect(() => {
     const setSize = () => {
       setWindowSize({
         width: window.innerWidth,
@@ -306,7 +382,11 @@ function Navbar() {
 
   return (
     <>
-      <nav className="relative left-0 right-0 m-auto my-2 flex w-[60%] items-center gap-x-1 rounded-lg bg-neutral-900/50 p-2 backdrop-blur-sm transition-all heropattern-floatingcogs-stone-900/50 portrait:w-[90%]">
+      <animated.nav
+        style={style}
+        ref={navRef}
+        className={`fixed left-0 right-0 z-10 m-auto my-2 flex w-[60%] items-center gap-x-1 rounded-lg backdrop-blur-sm transition-colors ${smolNav ? 'bg-neutral-900/80' : 'bg-neutral-900/50'} p-2 heropattern-floatingcogs-stone-900/50 portrait:w-[90%]`}
+      >
         <animated.div style={imageSpring} className="h-12 w-12 rounded-lg">
           <Image
             className="rounded-lg"
@@ -323,7 +403,9 @@ function Navbar() {
           {/* {windowSize.width < 800 ? links.slice(0, -1) : links.map((e) => e)} */}
           {(windowSize.width > 850 ? links : links.slice(0, -1)).map(
             (el, i) => (
-              <div key={i}>{el}</div>
+              <div key={i} className="font-bold">
+                {el}
+              </div>
             ),
           )}
           {/* <Link
@@ -393,8 +475,9 @@ function Navbar() {
             </span>
           ) : null}
         </animated.div>
+
         <Footer links={links} />
-      </nav>
+      </animated.nav>
     </>
   )
 }
