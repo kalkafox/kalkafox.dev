@@ -43,8 +43,8 @@ if (!rootElement.innerHTML) {
   const reducedMotion = window.localStorage.getItem('reducedMotion')
 
   if (!reducedMotion || (reducedMotion && reducedMotion === 'false')) {
-    //document.getElementById('fox')!.style.opacity = '0'
-    document.getElementById('progress-bg')!.style.opacity = '0'
+    document.getElementById('fox')!.style.opacity = '0'
+    //document.getElementById('progress-bg')!.style.opacity = '0'
   }
 
   progressFg.style.width = progressBg.style.width

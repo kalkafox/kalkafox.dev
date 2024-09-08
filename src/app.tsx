@@ -32,7 +32,7 @@ function App() {
   const navOffset = useAtomValue(navOffsetAtom)
 
   const [frontSpring, frontSpringApi] = useSpring(() => ({
-    scale: 0.95,
+    scale: 1,
     opacity: 0,
   }))
 
@@ -107,6 +107,7 @@ function App() {
       !reducedMotion ||
       (reducedMotion && reducedMotion === 'false' && renderReady)
     ) {
+      frontSpringApi.set({ scale: 0.95 })
       frontSpringApi.start({
         opacity: 1,
         scale: 1,
@@ -176,9 +177,7 @@ function App() {
             style={frontSpring}
             className="w-[90%] rounded-lg bg-stone-900/30 p-4 backdrop-blur-lg sm:w-[90%] md:w-[50%] portrait:w-[90%]"
           >
-            <Suspense fallback={<div>yea</div>}>
-              <Outlet />
-            </Suspense>
+            <Outlet />
           </animated.div>
         </div>
         {/* <TanStackRouterDevtools /> */}
