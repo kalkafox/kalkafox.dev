@@ -96,6 +96,11 @@ function Index() {
           <Icon icon="mdi:paw" className="inline -rotate-12" />
           {/* <p>Hi there!</p> */}
           <animated.p style={splashSpring}>{splash}</animated.p>
+          {/* {transitions((style, item, transition, key) => (
+            <animated.div key={key} style={style}>
+              {item}
+            </animated.div>
+          ))} */}
           <div className="absolute right-0 m-8">
             <PrideFlag />
           </div>

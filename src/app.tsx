@@ -103,22 +103,19 @@ function App() {
   useEffect(() => {
     const reducedMotion = window.localStorage.getItem('reducedMotion')
 
-    if (
-      !reducedMotion ||
-      (reducedMotion && reducedMotion === 'false' && renderReady)
-    ) {
-      frontSpringApi.set({ scale: 0.95 })
-      frontSpringApi.start({
-        opacity: 1,
-        scale: 1,
-      })
-    }
-
     if (reducedMotion && reducedMotion === 'true') {
       frontSpringApi.set({
         opacity: 1,
         scale: 1,
       })
+    } else {
+      if (renderReady) {
+        frontSpringApi.set({ scale: 0.95 })
+        frontSpringApi.start({
+          opacity: 1,
+          scale: 1,
+        })
+      }
     }
   }, [renderReady])
 
