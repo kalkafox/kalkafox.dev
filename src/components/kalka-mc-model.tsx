@@ -105,7 +105,7 @@ export function KalkaMCModel() {
 
     if (body) {
       const bodyRotationY = 3.1 + clampedAngleY * 0.4
-      const bodyTiltX = clampedAngleX * 0.2 // Slight vertical tilt
+      const bodyTiltX = -clampedAngleX * 0.2 // Slight vertical tilt
       fullSpring[1].start({
         rotation: [bodyTiltX, bodyRotationY, 0],
       })
