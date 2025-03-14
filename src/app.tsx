@@ -172,7 +172,7 @@ function App() {
         >
           <animated.div
             style={frontSpring}
-            className="w-[90%] rounded-lg bg-stone-900/30 p-4 backdrop-blur-lg sm:w-[90%] md:w-[50%] portrait:w-[90%]"
+            className="my-4 w-[90%] rounded-lg bg-stone-900/30 p-4 backdrop-blur-lg sm:w-[90%] md:w-[50%] portrait:w-[90%]"
           >
             <Outlet />
           </animated.div>

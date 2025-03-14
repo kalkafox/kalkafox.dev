@@ -35,3 +35,5 @@ export const reducedMotionAtom = atomWithToggleAndStorage(
 )
 
 export const docRefAtom = atom<RefObject<HTMLCanvasElement>>()
+
+export const boundingClientRectAtom = atom<DOMRect>()

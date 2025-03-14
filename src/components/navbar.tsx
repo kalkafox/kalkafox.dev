@@ -385,7 +385,7 @@ function Navbar({
       <animated.nav
         style={style}
         ref={navRef}
-        className={`fixed left-0 right-0 z-10 m-auto my-2 flex w-[60%] items-center gap-x-1 rounded-lg backdrop-blur-sm transition-colors ${smolNav ? 'bg-neutral-900/80' : 'bg-neutral-900/50'} p-2 heropattern-floatingcogs-stone-900/50 portrait:w-[90%]`}
+        className={`fixed left-0 right-0 z-10 m-auto my-6 flex w-[60%] items-center gap-x-1 rounded-lg transition-colors ${smolNav ? 'bg-neutral-900/80' : 'bg-neutral-900/50'} p-2 heropattern-floatingcogs-stone-900/50 portrait:w-[90%]`}
       >
         <animated.div style={imageSpring} className="h-12 w-12 rounded-lg">
           <Image
