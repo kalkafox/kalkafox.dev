@@ -98,7 +98,7 @@ export class EarsPhysics {
   constructor(leftEar: ModelPart, rightEar: ModelPart) {
     // Default configuration (adjust as needed)
     this.config = {
-      velocityStrength: 1,
+      velocityStrength: 0.05,
       headRotStrength: 0.4,
       bounce: 0.2,
       stiff: 0.3,

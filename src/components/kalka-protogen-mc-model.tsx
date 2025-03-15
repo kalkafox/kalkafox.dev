@@ -116,11 +116,7 @@ export function KalkaProtogen(props) {
 
     if (!ref) return
 
-    console.log('ya')
-
     const { x, y } = mousePosition.current
-
-    console.log(x)
 
     // Calculate the canvas position relative to the document
 
@@ -172,7 +168,7 @@ export function KalkaProtogen(props) {
     }
 
     // Update all registered ears
-    EarsPhysics.tick(player)
+    EarsPhysics.tick(player, delta)
     EarsPhysics.render(delta)
   })
 
