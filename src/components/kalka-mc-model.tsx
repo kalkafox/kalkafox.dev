@@ -44,7 +44,7 @@ export function KalkaMCModel() {
   }, [])
 
   useThree((state) => {
-    state.camera.position.set(0, 0, 1)
+    state.camera.position.set(0, 1.8, 1)
 
     //state.camera.rotateOnAxis(new Vector3(0, 1.8, 0), 180)
   })
