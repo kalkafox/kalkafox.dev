@@ -1,5 +1,3 @@
-// Pride flag -- thanks to https://www.joshwcomeau.com/animation/pride-flags/
-
 import range from 'lodash.range'
 
 export function PrideFlag({ numOfColumns = 10, staggeredDelay = 90 }) {
@@ -10,7 +8,7 @@ export function PrideFlag({ numOfColumns = 10, staggeredDelay = 90 }) {
           key={columnIndex}
           className="pride-flag-column"
           style={{
-            animationDelay: columnIndex * staggeredDelay + 'ms',
+            animationDelay: `calc(-550ms + ${columnIndex * staggeredDelay}ms)`,
           }}
         />
       ))}
