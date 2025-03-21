@@ -3,22 +3,30 @@ import KalkaProtogenModel from './kalka-protogen-model'
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover'
 import { HoverCard, HoverCardContent, HoverCardTrigger } from './ui/hover-card'
 import { isTouchDevice } from '@/lib/touch'
-import { Suspense } from 'react'
+import { Suspense, useEffect, useRef } from 'react'
 import { EffectComposer, FXAA } from '@react-three/postprocessing'
 import { motion } from 'motion/react'
-import { useAtomValue } from 'jotai'
-import { modelReadyAtom } from '@/lib/atom'
+import { useAtomValue, useSetAtom } from 'jotai'
+import { boundingClientRectAtom, modelReadyAtom } from '@/lib/atom'
 
 function Hover({ content }: Readonly<{ content: React.ReactNode }>) {
   const Wrapper = isTouchDevice() ? Popover : HoverCard
   const Trigger = isTouchDevice() ? PopoverTrigger : HoverCardTrigger
   const Content = isTouchDevice() ? PopoverContent : HoverCardContent
 
+  const canvasRef = useRef<HTMLCanvasElement>(null)
+
+  const setBoundingClientRect = useSetAtom(boundingClientRectAtom)
+
+  useEffect(() => {
+    setBoundingClientRect(canvasRef.current?.getBoundingClientRect())
+  }, [canvasRef, setBoundingClientRect])
+
   return (
     <Wrapper>
       <Trigger>
         <div className="h-24 w-24 sm:h-24 sm:w-24 lg:h-36 lg:w-36">
-          <Canvas className="rounded-full">
+          <Canvas ref={canvasRef} className="rounded-full">
             <Suspense fallback={null}>
               <ambientLight />
               <KalkaProtogenModel />

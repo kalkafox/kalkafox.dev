@@ -4,12 +4,12 @@ Command: npx gltfjsx@6.5.3 /home/kalka/mnt/backup_19.3.gltf -t
 */
 
 import * as THREE from 'three'
-import React, { JSX, useEffect } from 'react'
+import { JSX, useEffect, useRef, useState } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
 import { useGLTF, useAnimations } from '@react-three/drei'
 import { GLTF } from 'three-stdlib'
-import { useAtom } from 'jotai'
-import { modelReadyAtom } from '@/lib/atom'
+import { useAtom, useAtomValue } from 'jotai'
+import { boundingClientRectAtom, modelReadyAtom } from '@/lib/atom'
 
 type ActionName =
   | 'confused_start'
@@ -148,9 +148,31 @@ type GLTFResult = GLTF & {
 
 function KalkaProtogenModel(props: Readonly<JSX.IntrinsicElements['group']>) {
   const [, setModelReady] = useAtom(modelReadyAtom)
-  const group = React.useRef<THREE.Group>(null)
+  const group = useRef<THREE.Group>(null)
   const { nodes, animations } = useGLTF('/proot.gltf') as unknown as GLTFResult
-  const { actions } = useAnimations(animations, group)
+  const { actions, mixer } = useAnimations(animations, group)
+  const [waveFinished, setWaveFinished] = useState(false)
+
+  const ref = useAtomValue(boundingClientRectAtom)
+
+  const headRef = useRef<THREE.Group>(null)
+
+  const mousePosition = useRef({ x: 0, y: 0 })
+
+  const { camera } = useThree((state) => state)
+
+  // Track mouse position on the entire page
+  useEffect(() => {
+    const handleMouseMove = (event: MouseEvent) => {
+      mousePosition.current.x = event.clientX
+      mousePosition.current.y = event.clientY
+    }
+
+    window.addEventListener('mousemove', handleMouseMove)
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove)
+    }
+  }, [])
 
   useEffect(() => {
     let action = actions['wave'] // Change to the animation you want
@@ -183,28 +205,96 @@ function KalkaProtogenModel(props: Readonly<JSX.IntrinsicElements['group']>) {
       action.clampWhenFinished = true
       action.loop = THREE.LoopRepeat
     }
-  }, [actions])
 
-  useThree((state) => {
-    state.camera.position.set(0.5, 2, -0.9)
-    state.camera.lookAt(0, 1.5, 0)
+    // Set up finished event listener on the mixer
+    const onFinished = (e: { action: THREE.AnimationAction }) => {
+      // Check if the finished action is the 'wave' animation
+      if (e.action === actions.wave) {
+        setWaveFinished(true)
+      }
+    }
+    mixer.addEventListener('finished', onFinished)
 
-    // Ensure the camera updates
-    state.camera.updateProjectionMatrix()
+    // Clean up the event listener when component unmounts or dependencies change
+    return () => {
+      mixer.removeEventListener('finished', onFinished)
+    }
+  }, [actions, mixer])
 
+  useEffect(() => {
+    camera.position.set(0.3, 1.8, -1)
+    camera.lookAt(0, 1.5, 0)
+    camera.updateProjectionMatrix()
     setModelReady(true)
+    // This effect runs only once when the component mounts.
+  }, [camera, setModelReady])
 
-    //state.camera.rotateOnAxis(new Vector3(0, 1.8, 0), 180)
+  useFrame((state, delta) => {
+    if (waveFinished) {
+      // Define the target camera position
+      const targetPosition = new THREE.Vector3(0.8, 1.9, -1)
+      // Lerp the camera's position toward the target
+      state.camera.position.lerp(targetPosition, delta * 0.5)
+      // Optionally update camera's lookAt target if needed
+      state.camera.lookAt(0, 1.5, 0)
+
+      if (!headRef.current) return
+
+      if (!ref) return
+
+      const { x, y } = mousePosition.current
+
+      // Calculate the canvas position relative to the document
+
+      const canvasRect = ref
+      const canvasLeft = canvasRect.left
+      const canvasTop = canvasRect.top
+
+      // Adjust mouse position relative to the canvas
+      const relativeX = x - canvasLeft
+      const relativeY = y - canvasTop
+
+      // Calculate the center of the canvas
+      const centerX = canvasRect.width / 2
+      const centerY = canvasRect.height / 2
+
+      // Calculate normalized mouse position
+      const normalizedX = (relativeX - centerX) / centerX
+      const normalizedY = (relativeY - centerY) / centerY
+
+      // Define rotation bounds (for example, between -0.4 and 0.4 radians for both axes)
+      const maxRotation = 5
+      const targetRotationX = THREE.MathUtils.clamp(
+        -normalizedY * maxRotation,
+        -maxRotation,
+        maxRotation,
+      )
+      const targetRotationY = THREE.MathUtils.clamp(
+        normalizedX * maxRotation,
+        -maxRotation,
+        maxRotation,
+      )
+
+      const damping = 2.5 // Try a lower value
+      headRef.current.rotation.x = THREE.MathUtils.lerp(
+        headRef.current.rotation.x,
+        targetRotationX,
+        delta * damping,
+      )
+      headRef.current.rotation.y = THREE.MathUtils.lerp(
+        headRef.current.rotation.y,
+        targetRotationY,
+        delta * damping,
+      )
+    }
   })
-
-  useFrame(() => {})
 
   return (
     <group ref={group} {...props} dispose={null}>
       <group name="blockbench_export">
         <group>
           <group name="Main">
-            <group name="Head" position={[0, 1.5, 0]}>
+            <group ref={headRef} name="Head" position={[0, 1.5, 0]}>
               <group name="LeftEar" position={[0, 0.219, 0]}>
                 <mesh
                   name="Ear"
