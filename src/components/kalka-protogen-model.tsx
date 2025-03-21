@@ -237,56 +237,56 @@ function KalkaProtogenModel(props: Readonly<JSX.IntrinsicElements['group']>) {
       state.camera.position.lerp(targetPosition, delta * 0.5)
       // Optionally update camera's lookAt target if needed
       state.camera.lookAt(0, 1.5, 0)
-
-      if (!headRef.current) return
-
-      if (!ref) return
-
-      const { x, y } = mousePosition.current
-
-      // Calculate the canvas position relative to the document
-
-      const canvasRect = ref
-      const canvasLeft = canvasRect.left
-      const canvasTop = canvasRect.top
-
-      // Adjust mouse position relative to the canvas
-      const relativeX = x - canvasLeft
-      const relativeY = y - canvasTop
-
-      // Calculate the center of the canvas
-      const centerX = canvasRect.width / 2
-      const centerY = canvasRect.height / 2
-
-      // Calculate normalized mouse position
-      const normalizedX = (relativeX - centerX) / centerX
-      const normalizedY = (relativeY - centerY) / centerY
-
-      // Define rotation bounds (for example, between -0.4 and 0.4 radians for both axes)
-      const maxRotation = 5
-      const targetRotationX = THREE.MathUtils.clamp(
-        -normalizedY * maxRotation,
-        -maxRotation,
-        maxRotation,
-      )
-      const targetRotationY = THREE.MathUtils.clamp(
-        normalizedX * maxRotation,
-        -maxRotation,
-        maxRotation,
-      )
-
-      const damping = 2.5 // Try a lower value
-      headRef.current.rotation.x = THREE.MathUtils.lerp(
-        headRef.current.rotation.x,
-        targetRotationX,
-        delta * damping,
-      )
-      headRef.current.rotation.y = THREE.MathUtils.lerp(
-        headRef.current.rotation.y,
-        targetRotationY,
-        delta * damping,
-      )
     }
+
+    if (!headRef.current) return
+
+    if (!ref) return
+
+    const { x, y } = mousePosition.current
+
+    // Calculate the canvas position relative to the document
+
+    const canvasRect = ref
+    const canvasLeft = canvasRect.left
+    const canvasTop = canvasRect.top
+
+    // Adjust mouse position relative to the canvas
+    const relativeX = x - canvasLeft
+    const relativeY = y - canvasTop
+
+    // Calculate the center of the canvas
+    const centerX = canvasRect.width / 2
+    const centerY = canvasRect.height / 2
+
+    // Calculate normalized mouse position
+    const normalizedX = (relativeX - centerX) / centerX
+    const normalizedY = (relativeY - centerY) / centerY
+
+    // Define rotation bounds (for example, between -0.4 and 0.4 radians for both axes)
+    const maxRotation = 5
+    const targetRotationX = THREE.MathUtils.clamp(
+      -normalizedY * maxRotation,
+      -maxRotation,
+      maxRotation,
+    )
+    const targetRotationY = THREE.MathUtils.clamp(
+      normalizedX * maxRotation,
+      -maxRotation,
+      maxRotation,
+    )
+
+    const damping = 2.5 // Try a lower value
+    headRef.current.rotation.x = THREE.MathUtils.lerp(
+      headRef.current.rotation.x,
+      targetRotationX,
+      delta * damping,
+    )
+    headRef.current.rotation.y = THREE.MathUtils.lerp(
+      headRef.current.rotation.y,
+      targetRotationY,
+      delta * damping,
+    )
   })
 
   return (
